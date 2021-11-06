@@ -22,7 +22,7 @@
     "@angular/router": "~12.2.3",
     "ngx-virtual-scroller": "^4.0.3",
     "rxjs": "~6.6.0",
-    "spread-table": "^1.1.0",
+    "spread-table": "file:../../dist/spread-table",
     "tslib": "^1.10.0",
     "zone.js": "~0.11.4"
   },
