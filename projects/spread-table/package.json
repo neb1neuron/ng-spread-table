@@ -7,13 +7,13 @@
     "spreadsheet"
   ],
   "peerDependencies": {
-    "@angular/common": "~12.2.3",
-    "@angular/core": "~12.2.3",
-    "rxjs": "~6.6.0",
-    "@angular/compiler-cli": "~12.2.3",
-    "@angular/forms": "~12.2.3",
-    "@angular/localize": "~12.2.3",
-    "tslib": "^1.10.0",
+    "@angular/common": "~13.0.0",
+    "@angular/core": "~13.0.0",
+    "rxjs": "~7.4.0",
+    "@angular/compiler-cli": "~13.0.0",
+    "@angular/forms": "~13.0.0",
+    "@angular/localize": "~13.0.0",
+    "tslib": "^2.3.1",
     "zone.js": "~0.11.4"
   },
   "author": "Feder Catalin <feder.catalin@gmail.com> (https://www.d3cod3r.com/)",
