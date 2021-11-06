@@ -10,7 +10,6 @@
     "@angular/common": "~12.2.3",
     "@angular/core": "~12.2.3",
     "rxjs": "~6.6.0",
-    "ngx-virtual-scroller": "^4.0.3",
     "@angular/compiler-cli": "~12.2.3",
     "@angular/forms": "~12.2.3",
     "@angular/localize": "~12.2.3",
