@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Column } from 'test-packages/src/public-api';
+import { lastValueFrom } from 'rxjs';
+import { Column } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
 
 @Component({
@@ -23,7 +24,8 @@ export class AppComponent {
   }
 
   private async getData() {
-    const products: any = await this.httpClient.get('../assets/data.json').toPromise();
+    const products: any = await lastValueFrom(this.httpClient.get('../assets/data.json'));
+
     this.data = products;
   }
 }

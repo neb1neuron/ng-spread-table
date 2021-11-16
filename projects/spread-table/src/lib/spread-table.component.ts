@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
 import { SpreadTable } from './models/ispread-table';
@@ -10,10 +10,12 @@ import { ContextMenuModel } from './models/context-menu.model';
   templateUrl: './spread-table.component.html',
   styleUrls: ['./spread-table.component.scss']
 })
-export class SpreadTableComponent extends SpreadTable implements AfterViewInit, OnChanges {
+export class SpreadTableComponent extends SpreadTable implements OnChanges {
   table = document.getElementById('spreadTable');
 
   @Input() columnWidth = 100;
+  @Input() itemSize = 24;
+  @Input() indexWidth = 50;
   @Input() rawData: any = null;
   // this needs to be a more complex object that contains dispayName and propertyName to be able to map from the rawData json
   @Input() columns: Column[] = [];
@@ -108,16 +110,22 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    let data: Row[] = [];
     if (changes.rawData.currentValue) {
       for (let i = 0; i < this.rawData.length; i++) {
         let row = new Row({ rowIndex: i, cells: [] });
-        const keys = Object.keys(this.rawData[0]);
 
         for (let j = 0; j < this.columns.length; j++) {
           row.cells.push({ columnName: this.columns[j].name, value: this.rawData[i][this.columns[j].name], rowIndex: i, columnIndex: j });
         }
-        this.data.push(row);
+        data.push(row);
       }
+
+      this.data = [...data];
+
+      setTimeout(() => {
+        this.setupTableEvents();
+      }, 0);
     }
   }
 
@@ -125,7 +133,7 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
     return row.cells.find(c => c.columnName === columnName)?.value;
   }
 
-  ngAfterViewInit() {
+  setupTableEvents() {
     this.table = document.getElementById('spreadTable');
 
     this.table?.addEventListener('paste', this.handlePaste);
@@ -142,6 +150,22 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
       this.isMouseDown = false;
     });
     this.table?.addEventListener("keydown", (e) => { this.keyDownCall(e) });
+
+    this.setColumnsWidth();
+
+    window.addEventListener('resize', this.setColumnsWidth);
+  }
+
+  setColumnsWidth() {
+    const headerWidth = document.getElementById('spreadTableHeader').offsetWidth;
+    document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
+
+    let columnTds = document.querySelectorAll('#spreadTableHeader tr td');
+    let rowTds = document.querySelector('#spreadTable tr')?.querySelectorAll('td');
+    if (!rowTds) return;
+    for (let index = 0; index < rowTds.length; index++) {
+      columnTds[index]['style'].width = rowTds[index].getClientRects()[0].width + 'px';
+    }
   }
 
   mouseUp() {
@@ -202,9 +226,9 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
 
     if (event.ctrlKey && event.key === 'x') {
       this.cutSelectedCellsValues();
-
       e.stopPropagation();
       e.preventDefault();
+      e.cancelBubble = true;
     }
 
     if (!this.isEditMode) {
@@ -354,7 +378,7 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
       this.undoRedoService.setChange(changes);
   }
 
-  cutSelectedCellsValues() {
+  async cutSelectedCellsValues() {
     let selectedCells: Cell[] = [];
     this.data.forEach(r => selectedCells = selectedCells.concat(r.cells.filter(d => d.selected)));
 
@@ -392,7 +416,6 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
       copyString = copyString.trimEnd();
       copyString += '\r\n';
     });
-    console.log(copyString);
     await navigator.clipboard.writeText(copyString);
   }
 
@@ -410,7 +433,6 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
     dataRows.forEach(dataRow => {
       if (dataRow) {
         copyData.push(dataRow.split('\t'));
-        console.log(dataRow);
       }
     });
 

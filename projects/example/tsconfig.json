@@ -19,7 +19,7 @@
     "lib": [
       "es2019",
       "dom"
-    ],
+    ]
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

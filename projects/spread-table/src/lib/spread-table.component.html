@@ -1,32 +1,41 @@
-<virtual-scroller #scroll
-                  [stripedTable]="true"
-                  [enableUnequalChildrenSizes]="true"
-                  [items]="data">
-  <div #spreadWrapper
-       class="wrapper"
-       [formGroup]="form">
+<div #spreadWrapper
+     class="wrapper"
+     [formGroup]="form">
+  <table class="spread-table"
+         id="spreadTableHeader"
+         style="height: auto;">
+    <tbody class="spread-thead">
+      <tr>
+        <td style="width: 30px;">
+          <div [style.width]="indexWidth+'px'">Index
+          </div>
+        </td>
+        <td *ngFor="let column of columns">
+          <div [style.width]="column.width || '100px'">{{column.displayName}}</div>
+        </td>
+        <td style="width: 10px;padding:0;border:0">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <cdk-virtual-scroll-viewport [itemSize]="itemSize">
+
     <table #spreadTable
            tabindex="-1"
            class="spread-table"
            contenteditable="true"
            id="spreadTable">
-      <thead #header
-             contenteditable="false"
-             class="spread-thead">
-        <tr>
-          <th>Index</th>
-          <th [width]="column.width || '20px'"
-              *ngFor="let column of columns">{{column.displayName}}</th>
-        </tr>
-      </thead>
-      <tbody #container
-             contenteditable="false"
+      <tbody contenteditable="false"
              class="spread-tbody">
         <tr class="spread-row"
-            *ngFor="let row of scroll.viewPortItems;let i = index">
-          <td style="width: 10px;">{{row.rowIndex}}</td>
+            *cdkVirtualFor="let row of data;let i = index">
+          <td>
+            <div [style.width]="indexWidth+'px'">{{row.rowIndex}}</div>
+          </td>
           <td #spreadCell
               class="spread-cell"
+              [style.height]="itemSize+'px'"
               (contextmenu)="openContextMenu($event,row.cells[j]);"
               (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"
               (mousedown)="cellClick($event,row.cells[j])"
@@ -54,8 +63,8 @@
         </tr>
       </tbody>
     </table>
-  </div>
-</virtual-scroller>
+  </cdk-virtual-scroll-viewport>
+</div>
 <app-context-menu #contextMenu
                   *ngIf="contextMenuItems().length > 0 && isDisplayContextMenu"
                   [contextMenuItems]="contextMenuItems()"

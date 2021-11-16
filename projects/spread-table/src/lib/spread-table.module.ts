@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SpreadTableComponent } from './spread-table.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 
@@ -16,7 +16,7 @@ import { ContextMenuComponent } from './context-menu/context-menu.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    VirtualScrollerModule,
+    ScrollingModule,
   ],
   exports: [SpreadTableComponent]
 })
