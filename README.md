@@ -138,9 +138,15 @@ columns: Column[] = [
 ### Result 
 ![Validations](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/required-validation.png)
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
-
 ## Versions
+
+### v2.0.0
+
+- this version has some big updates
+- updated to **angular 13**
+- removed ngx-virtual-scroller dependency
+- using divs instead of table structure
+- improved styling
 
 ### v1.1.1
 
@@ -152,7 +158,6 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 ## Dependencies
 
 ```
-"ngx-virtual-scroller": "^4.0.3",
 "rxjs": "~6.6.0",
 ```
 

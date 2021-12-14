@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
 import { SpreadTable } from './models/ispread-table';
@@ -10,11 +10,15 @@ import { ContextMenuModel } from './models/context-menu.model';
   templateUrl: './spread-table.component.html',
   styleUrls: ['./spread-table.component.scss']
 })
-export class SpreadTableComponent extends SpreadTable implements AfterViewInit, OnChanges {
+export class SpreadTableComponent extends SpreadTable implements OnChanges {
   table = document.getElementById('spreadTable');
 
   @Input() columnWidth = 100;
+  @Input() itemSize = 24;
+  @Input() indexWidth = 60;
   @Input() rawData: any = null;
+  @Input() headerBgColor = '#634be3';
+  @Input() headerColor = '#efefef';
   // this needs to be a more complex object that contains dispayName and propertyName to be able to map from the rawData json
   @Input() columns: Column[] = [];
   data: Row[] = [];
@@ -30,6 +34,8 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
   endCellIndex = 0;
   selectedCellCoordinates?: { rowIndex: number, columnIndex: number } = undefined;
   isEditMode = false;
+  columnBeingResized = null;
+  columnResizesStartX = 0;
 
   isDisplayContextMenu: boolean = false;
 
@@ -108,16 +114,23 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    let data: Row[] = [];
     if (changes.rawData.currentValue) {
       for (let i = 0; i < this.rawData.length; i++) {
         let row = new Row({ rowIndex: i, cells: [] });
-        const keys = Object.keys(this.rawData[0]);
 
         for (let j = 0; j < this.columns.length; j++) {
           row.cells.push({ columnName: this.columns[j].name, value: this.rawData[i][this.columns[j].name], rowIndex: i, columnIndex: j });
         }
-        this.data.push(row);
+        data.push(row);
       }
+
+      this.data = [...data];
+
+      setTimeout(() => {
+        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.width || 100).reduce((a, b) => a + b, 0) + 10) + 'px';
+        this.setupTableEvents();
+      }, 0);
     }
   }
 
@@ -125,12 +138,8 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
     return row.cells.find(c => c.columnName === columnName)?.value;
   }
 
-  ngAfterViewInit() {
+  setupTableEvents() {
     this.table = document.getElementById('spreadTable');
-
-    this.table?.addEventListener('paste', this.handlePaste);
-
-    this.table?.addEventListener('copy', this.handleCopy);
 
     document.addEventListener('scroll', (e) => this.isDisplayContextMenu = false, true);
 
@@ -141,7 +150,33 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
     this.table?.addEventListener("mouseup", () => {
       this.isMouseDown = false;
     });
+
+    document.addEventListener("mouseup", () => {
+      this.clickResizeColumn({ pageX: 0 }, null);
+    });
+
     this.table?.addEventListener("keydown", (e) => { this.keyDownCall(e) });
+
+    this.setColumnsWidth();
+
+    document.addEventListener("mousemove", (e) => { if (this.columnBeingResized) this.resizeColumn(e); })
+
+    window.addEventListener('resize', this.setColumnsWidth);
+  }
+
+  setColumnsWidth() {
+    //const headerWidth = Math.trunc(document.querySelector('table').clientWidth) - 1;
+    const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
+    document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
+    // const headerWidth = document.querySelector('.spread-thead').clientWidth;
+    // document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
+
+    // let columnTds = document.querySelectorAll('#spreadTableHeader .spread-thead div');
+    // let rowTds = document.querySelector('#spreadTable tr')?.querySelectorAll('td');
+    // if (!rowTds) return;
+    // for (let index = 0; index < rowTds.length; index++) {
+    //   columnTds[index]['style'].width = rowTds[index].getClientRects()[0].width + 'px';
+    // }
   }
 
   mouseUp() {
@@ -202,9 +237,9 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
 
     if (event.ctrlKey && event.key === 'x') {
       this.cutSelectedCellsValues();
-
       e.stopPropagation();
       e.preventDefault();
+      e.cancelBubble = true;
     }
 
     if (!this.isEditMode) {
@@ -282,27 +317,45 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
             }
           }
           break;
+        case 'Escape':
+        case 'Shift':
+          break;
+        case 'Enter':
+          let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+          this.doubleClick(selectedCell);
+          break;
+        default:
+        // if (!event.ctrlKey && this.selectedCellCoordinates) {
+        //   let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+        //   this.doubleClick(selectedCell);
+        //   this.form.get(this.columns[this.selectedCellCoordinates.columnIndex].name).setValue(event.key);
+        // }
       }
-    }
 
-    if (event.ctrlKey && event.key === 'z') {
-      this.undo();
-    }
+      if (event.ctrlKey) {
 
-    if (event.ctrlKey && event.key === 'y') {
-      this.redo();
-    }
+        switch (event.key) {
+          case 'v':
+            this.handlePaste();
+            break;
+          case 'c':
+            this.handleCopy();
+            break;
+          case 'z':
+            this.undo();
+            break;
+          case 'y':
+            this.redo();
+            break;
+          default:
+            break;
+        }
+      }
+    } else {
 
-    if (event.key === 'Enter' && this.selectedCellCoordinates && !this.isEditMode) {
-      this.doubleClick(this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex))
-    }
-
-    if (event.key === 'Enter' && this.isEditMode) {
-      this.table?.focus();
-    }
-
-    if (event.key === 'Escape' && this.isEditMode) {
-      this.table?.focus();
+      if (event.key === 'Enter' || event.key === 'Escape') {
+        this.table?.focus();
+      }
     }
   }
 
@@ -354,7 +407,7 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
       this.undoRedoService.setChange(changes);
   }
 
-  cutSelectedCellsValues() {
+  async cutSelectedCellsValues() {
     let selectedCells: Cell[] = [];
     this.data.forEach(r => selectedCells = selectedCells.concat(r.cells.filter(d => d.selected)));
 
@@ -392,7 +445,6 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
       copyString = copyString.trimEnd();
       copyString += '\r\n';
     });
-    console.log(copyString);
     await navigator.clipboard.writeText(copyString);
   }
 
@@ -410,7 +462,6 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
     dataRows.forEach(dataRow => {
       if (dataRow) {
         copyData.push(dataRow.split('\t'));
-        console.log(dataRow);
       }
     });
 
@@ -618,7 +669,7 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
     if (controlErrors) {
       Object.keys(controlErrors).forEach(key => {
         if (controlErrors[key])
-          cellErrors.push(`&bull;${controlErrors[key]}`);
+          cellErrors.push(`<i class="fas fa-exclamation-triangle"></i>${controlErrors[key]}`);
       });
     }
 
@@ -638,5 +689,21 @@ export class SpreadTableComponent extends SpreadTable implements AfterViewInit, 
       }
     });
     return map;
+  }
+
+  clickResizeColumn(event, column: Column) {
+    this.columnBeingResized = column;
+    this.columnResizesStartX = event.x;
+  }
+
+  resizeColumn(event) {
+    if (this.columnBeingResized) {
+      const finalWidth = (this.columnBeingResized.width || 100) + (event.x - this.columnResizesStartX);
+      if (finalWidth > 100) {
+        this.columnBeingResized.width = finalWidth;
+        this.setColumnsWidth();
+        console.log(event);
+      }
+    }
   }
 }

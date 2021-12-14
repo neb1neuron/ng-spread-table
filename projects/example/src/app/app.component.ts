@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Column } from 'test-packages/src/public-api';
+import { lastValueFrom } from 'rxjs';
+import { Column } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
 
 @Component({
@@ -10,11 +11,11 @@ import { RequiredValidator } from './custom-validators/required-validator';
 })
 export class AppComponent {
   columns: Column[] = [
-    new Column({ displayName: 'Id', name: 'id', width: '40px', editable: false }),
-    new Column({ displayName: 'Album Id', name: 'albumId', width: '70px' }),
-    new Column({ displayName: 'Title', name: 'title', width: '400px', validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
-    new Column({ displayName: 'Url', name: 'url', width: '300px' }),
-    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', width: '300px' })];
+    new Column({ displayName: 'Id', name: 'id', editable: false }),
+    new Column({ displayName: 'Album Id', name: 'albumId', width: 120 }),
+    new Column({ displayName: 'Title', name: 'title', width: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
+    new Column({ displayName: 'Url', name: 'url', width: 300 }),
+    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', width: 300 })];
 
   data: any;
 
@@ -23,7 +24,8 @@ export class AppComponent {
   }
 
   private async getData() {
-    const products: any = await this.httpClient.get('../assets/data.json').toPromise();
+    const products: any = await lastValueFrom(this.httpClient.get('../assets/data.json'));
+
     this.data = products;
   }
 }

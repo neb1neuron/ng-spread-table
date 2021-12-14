@@ -1,45 +1,65 @@
-<virtual-scroller #scroll
-                  [stripedTable]="true"
-                  [enableUnequalChildrenSizes]="true"
-                  [items]="data">
-  <div #spreadWrapper
-       class="wrapper"
-       [formGroup]="form">
-    <table #spreadTable
-           tabindex="-1"
-           class="spread-table"
-           contenteditable="true"
-           id="spreadTable">
-      <thead #header
-             contenteditable="false"
-             class="spread-thead">
-        <tr>
-          <th>Index</th>
-          <th [width]="column.width || '20px'"
-              *ngFor="let column of columns">{{column.displayName}}</th>
-        </tr>
-      </thead>
-      <tbody #container
-             contenteditable="false"
-             class="spread-tbody">
-        <tr class="spread-row"
-            *ngFor="let row of scroll.viewPortItems;let i = index">
-          <td style="width: 10px;">{{row.rowIndex}}</td>
-          <td #spreadCell
-              class="spread-cell"
-              (contextmenu)="openContextMenu($event,row.cells[j]);"
-              (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"
-              (mousedown)="cellClick($event,row.cells[j])"
-              (mouseover)="mouseOverCall(row.cells[j])"
-              [ngClass]="[isInEditMode(row.cells[j]) ? 'no-padding':'',
+<div #spreadWrapper
+     class="wrapper"
+     [formGroup]="form">
+  <div id="widthReference"></div>
+
+  <div tabindex="-1"
+       class="">
+    <div class="spread-thead w-100">
+      <div class="columnHeader"
+           [style.background-color]="headerBgColor"
+           [style.color]="headerColor"
+           [style.flex-basis]="indexWidth + 'px'"
+           [style.flex-grow]="0">Index
+        <div class="column-sizer"></div>
+      </div>
+      <ng-container *ngFor="let column of columns">
+        <div class="columnHeader"
+             [style.background-color]="headerBgColor"
+             [style.color]="headerColor"
+             [style.flex-basis]="(column.width || 100) + 'px'">{{column.displayName}}
+          <div class="column-sizer"></div>
+        </div>
+      </ng-container>
+      <div class="columnHeader"
+           [style.background-color]="headerBgColor"
+           [style.color]="headerColor">
+      </div>
+    </div>
+  </div>
+
+  <cdk-virtual-scroll-viewport [itemSize]="itemSize">
+
+    <div #spreadTable
+         tabindex="-1"
+         class="spread-table"
+         contenteditable="true"
+         id="spreadTable">
+
+      <div contenteditable="false"
+           class="spread-tbody">
+        <div class="spread-row"
+             *cdkVirtualFor="let row of data;let i = index">
+          <div class="spread-cell"
+               [style.flex-basis]="indexWidth + 'px'"
+               [style.height]="itemSize+'px'"
+               [style.flex-grow]="0">{{row.rowIndex}}</div>
+          <div #spreadCell
+               [style.flex-basis]="(column.width || 100) + 'px'"
+               class="spread-cell"
+               [style.height]="itemSize+'px'"
+               (contextmenu)="openContextMenu($event,row.cells[j]);"
+               (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"
+               (mousedown)="cellClick($event,row.cells[j])"
+               (mouseover)="mouseOverCall(row.cells[j])"
+               [ngClass]="[isInEditMode(row.cells[j]) ? 'no-padding':'',
             row.cells[j]?.selected  ? 'selected' : '',
             row.cells[j]?.errors  ? 'has-errors' : '',
             column.editable ? '' : 'not-editable']"
-              *ngFor="let column of columns;let j = index">
+               *ngFor="let column of columns;let j = index">
             <div style="height: 100%;"
                  class="error tooltip w-100">
               <div class="spread-cell-value hideextra"
-                   [style.width]="column.width || '100px'"
                    *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div>
               <input *ngIf="isInEditMode(row.cells[j])"
                      type="text"
@@ -47,15 +67,15 @@
                      (blur)="setCellValue(columns[j],row.cells[j])"
                      [formControlName]="columns[j].name" />
               <span *ngIf="row.cells[j].errors"
-                    class="tooltiptext tooltip-bottom"
+                    class="validation-errors tooltiptext tooltip-bottom"
                     [innerHtml]="row.cells[j].errors"></span>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</virtual-scroller>
+          </div>
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>
 <app-context-menu #contextMenu
                   *ngIf="contextMenuItems().length > 0 && isDisplayContextMenu"
                   [contextMenuItems]="contextMenuItems()"

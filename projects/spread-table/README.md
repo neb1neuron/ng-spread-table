@@ -142,6 +142,14 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Versions
 
+### v2.0.0
+
+- this version has some big updates
+- updated to **angular 13**
+- removed ngx-virtual-scroller dependency
+- using divs instead of table structure
+- improved styling
+
 ### v1.1.1
 
 - improved clipboard functionality to be able to paste from excel and copy from **spread-table** to excel
@@ -152,7 +160,6 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 ## Dependencies
 
 ```
-"ngx-virtual-scroller": "^4.0.3",
 "rxjs": "~6.6.0",
 ```
 

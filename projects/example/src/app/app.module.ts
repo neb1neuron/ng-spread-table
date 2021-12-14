@@ -6,18 +6,22 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { SpreadTableModule } from 'test-packages/src/public-api';
+import { CommonModule } from '@angular/common';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SpreadTableModule } from 'spread-table';
 @NgModule({
   declarations: [
     AppComponent,
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule,
     SpreadTableModule,
+    ReactiveFormsModule,
+    ScrollingModule,
     HttpClientModule
   ],
   providers: [],
