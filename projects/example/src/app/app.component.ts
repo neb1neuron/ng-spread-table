@@ -11,11 +11,11 @@ import { RequiredValidator } from './custom-validators/required-validator';
 })
 export class AppComponent {
   columns: Column[] = [
-    new Column({ displayName: 'Id', name: 'id', width: '40px', editable: false }),
-    new Column({ displayName: 'Album Id', name: 'albumId', width: '70px' }),
-    new Column({ displayName: 'Title', name: 'title', width: '400px', validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
-    new Column({ displayName: 'Url', name: 'url', width: '300px' }),
-    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', width: '300px' })];
+    new Column({ displayName: 'Id', name: 'id', editable: false }),
+    new Column({ displayName: 'Album Id', name: 'albumId', width: 120 }),
+    new Column({ displayName: 'Title', name: 'title', width: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
+    new Column({ displayName: 'Url', name: 'url', width: 300 }),
+    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', width: 300 })];
 
   data: any;
 

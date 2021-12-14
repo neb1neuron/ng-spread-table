@@ -1,54 +1,59 @@
 <div #spreadWrapper
      class="wrapper"
      [formGroup]="form">
-  <table class="spread-table"
-         id="spreadTableHeader"
-         style="height: auto;">
-    <tbody class="spread-thead">
-      <tr>
-        <td style="width: 30px;">
-          <div [style.width]="indexWidth+'px'">Index
-          </div>
-        </td>
-        <td *ngFor="let column of columns">
-          <div [style.width]="column.width || '100px'">{{column.displayName}}</div>
-        </td>
-        <td style="width: 10px;padding:0;border:0">
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div id="widthReference"></div>
+
+  <div tabindex="-1"
+       class="">
+    <div class="spread-thead w-100">
+      <div class="columnHeader"
+           [style.flex-basis]="indexWidth + 'px'"
+           [style.flex-grow]="0">Index
+        <div class="column-sizer"></div>
+      </div>
+      <ng-container *ngFor="let column of columns">
+        <div class="columnHeader"
+             [style.flex-basis]="(column.width || 100) + 'px'">{{column.displayName}}
+          <div class="column-sizer"></div>
+        </div>
+      </ng-container>
+      <div class="columnHeader">
+      </div>
+    </div>
+  </div>
 
   <cdk-virtual-scroll-viewport [itemSize]="itemSize">
 
-    <table #spreadTable
-           tabindex="-1"
-           class="spread-table"
-           contenteditable="true"
-           id="spreadTable">
-      <tbody contenteditable="false"
-             class="spread-tbody">
-        <tr class="spread-row"
-            *cdkVirtualFor="let row of data;let i = index">
-          <td>
-            <div [style.width]="indexWidth+'px'">{{row.rowIndex}}</div>
-          </td>
-          <td #spreadCell
-              class="spread-cell"
-              [style.height]="itemSize+'px'"
-              (contextmenu)="openContextMenu($event,row.cells[j]);"
-              (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"
-              (mousedown)="cellClick($event,row.cells[j])"
-              (mouseover)="mouseOverCall(row.cells[j])"
-              [ngClass]="[isInEditMode(row.cells[j]) ? 'no-padding':'',
+    <div #spreadTable
+         tabindex="-1"
+         class="spread-table"
+         contenteditable="true"
+         id="spreadTable">
+
+      <div contenteditable="false"
+           class="spread-tbody">
+        <div class="spread-row"
+             *cdkVirtualFor="let row of data;let i = index">
+          <div class="spread-cell"
+               [style.flex-basis]="indexWidth + 'px'"
+               [style.height]="itemSize+'px'"
+               [style.flex-grow]="0">{{row.rowIndex}}</div>
+          <div #spreadCell
+               [style.flex-basis]="(column.width || 100) + 'px'"
+               class="spread-cell"
+               [style.height]="itemSize+'px'"
+               (contextmenu)="openContextMenu($event,row.cells[j]);"
+               (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"
+               (mousedown)="cellClick($event,row.cells[j])"
+               (mouseover)="mouseOverCall(row.cells[j])"
+               [ngClass]="[isInEditMode(row.cells[j]) ? 'no-padding':'',
             row.cells[j]?.selected  ? 'selected' : '',
             row.cells[j]?.errors  ? 'has-errors' : '',
             column.editable ? '' : 'not-editable']"
-              *ngFor="let column of columns;let j = index">
+               *ngFor="let column of columns;let j = index">
             <div style="height: 100%;"
                  class="error tooltip w-100">
               <div class="spread-cell-value hideextra"
-                   [style.width]="column.width || '100px'"
                    *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div>
               <input *ngIf="isInEditMode(row.cells[j])"
                      type="text"
@@ -59,10 +64,10 @@
                     class="tooltiptext tooltip-bottom"
                     [innerHtml]="row.cells[j].errors"></span>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </cdk-virtual-scroll-viewport>
 </div>
 <app-context-menu #contextMenu

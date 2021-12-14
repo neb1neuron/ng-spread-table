@@ -27,7 +27,7 @@ export class Row {
 export class Column {
   public name = '';
   public displayName?= 'N/A';
-  public width?= '100px';
+  public width?= 100;
   public editable?= true;
   public validators?: any[] | undefined;
 

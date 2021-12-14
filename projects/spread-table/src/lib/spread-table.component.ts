@@ -15,7 +15,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
   @Input() columnWidth = 100;
   @Input() itemSize = 24;
-  @Input() indexWidth = 50;
+  @Input() indexWidth = 60;
   @Input() rawData: any = null;
   // this needs to be a more complex object that contains dispayName and propertyName to be able to map from the rawData json
   @Input() columns: Column[] = [];
@@ -32,6 +32,8 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   endCellIndex = 0;
   selectedCellCoordinates?: { rowIndex: number, columnIndex: number } = undefined;
   isEditMode = false;
+  columnBeingResized = null;
+  columnResizesStartX = 0;
 
   isDisplayContextMenu: boolean = false;
 
@@ -124,6 +126,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       this.data = [...data];
 
       setTimeout(() => {
+        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.width || 100).reduce((a, b) => a + b, 0) + 10) + 'px';
         this.setupTableEvents();
       }, 0);
     }
@@ -136,10 +139,6 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   setupTableEvents() {
     this.table = document.getElementById('spreadTable');
 
-    this.table?.addEventListener('paste', this.handlePaste);
-
-    this.table?.addEventListener('copy', this.handleCopy);
-
     document.addEventListener('scroll', (e) => this.isDisplayContextMenu = false, true);
 
     this.table?.addEventListener("selectstart", () => {
@@ -149,23 +148,33 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     this.table?.addEventListener("mouseup", () => {
       this.isMouseDown = false;
     });
+
+    document.addEventListener("mouseup", () => {
+      this.clickResizeColumn({ pageX: 0 }, null);
+    });
+
     this.table?.addEventListener("keydown", (e) => { this.keyDownCall(e) });
 
     this.setColumnsWidth();
+
+    document.addEventListener("mousemove", (e) => { if (this.columnBeingResized) this.resizeColumn(e); })
 
     window.addEventListener('resize', this.setColumnsWidth);
   }
 
   setColumnsWidth() {
-    const headerWidth = document.getElementById('spreadTableHeader').offsetWidth;
+    //const headerWidth = Math.trunc(document.querySelector('table').clientWidth) - 1;
+    const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
     document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
+    // const headerWidth = document.querySelector('.spread-thead').clientWidth;
+    // document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
 
-    let columnTds = document.querySelectorAll('#spreadTableHeader tr td');
-    let rowTds = document.querySelector('#spreadTable tr')?.querySelectorAll('td');
-    if (!rowTds) return;
-    for (let index = 0; index < rowTds.length; index++) {
-      columnTds[index]['style'].width = rowTds[index].getClientRects()[0].width + 'px';
-    }
+    // let columnTds = document.querySelectorAll('#spreadTableHeader .spread-thead div');
+    // let rowTds = document.querySelector('#spreadTable tr')?.querySelectorAll('td');
+    // if (!rowTds) return;
+    // for (let index = 0; index < rowTds.length; index++) {
+    //   columnTds[index]['style'].width = rowTds[index].getClientRects()[0].width + 'px';
+    // }
   }
 
   mouseUp() {
@@ -306,27 +315,45 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
             }
           }
           break;
+        case 'Escape':
+        case 'Shift':
+          break;
+        case 'Enter':
+          let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+          this.doubleClick(selectedCell);
+          break;
+        default:
+        // if (!event.ctrlKey && this.selectedCellCoordinates) {
+        //   let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+        //   this.doubleClick(selectedCell);
+        //   this.form.get(this.columns[this.selectedCellCoordinates.columnIndex].name).setValue(event.key);
+        // }
       }
-    }
 
-    if (event.ctrlKey && event.key === 'z') {
-      this.undo();
-    }
+      if (event.ctrlKey) {
 
-    if (event.ctrlKey && event.key === 'y') {
-      this.redo();
-    }
+        switch (event.key) {
+          case 'v':
+            this.handlePaste();
+            break;
+          case 'c':
+            this.handleCopy();
+            break;
+          case 'z':
+            this.undo();
+            break;
+          case 'y':
+            this.redo();
+            break;
+          default:
+            break;
+        }
+      }
+    } else {
 
-    if (event.key === 'Enter' && this.selectedCellCoordinates && !this.isEditMode) {
-      this.doubleClick(this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex))
-    }
-
-    if (event.key === 'Enter' && this.isEditMode) {
-      this.table?.focus();
-    }
-
-    if (event.key === 'Escape' && this.isEditMode) {
-      this.table?.focus();
+      if (event.key === 'Enter' || event.key === 'Escape') {
+        this.table?.focus();
+      }
     }
   }
 
@@ -660,5 +687,21 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       }
     });
     return map;
+  }
+
+  clickResizeColumn(event, column: Column) {
+    this.columnBeingResized = column;
+    this.columnResizesStartX = event.x;
+  }
+
+  resizeColumn(event) {
+    if (this.columnBeingResized) {
+      const finalWidth = (this.columnBeingResized.width || 100) + (event.x - this.columnResizesStartX);
+      if (finalWidth > 100) {
+        this.columnBeingResized.width = finalWidth;
+        this.setColumnsWidth();
+        console.log(event);
+      }
+    }
   }
 }
