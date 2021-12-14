@@ -474,6 +474,7 @@ cdk-virtual-scroll-viewport {
     flex-grow: 1;
     flex-shrink: 0;
     justify-content: space-between;
+    user-select: none;
 
     .column-sizer {
       width: 1px;
