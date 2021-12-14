@@ -552,11 +552,11 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   cellClick(e: Event, cell: Cell) {
     let event = e as MouseEvent;
     if (event.button === 2 && cell.selected) {
-      return;
+      return false;
     }
     if (cell.columnIndex === this.selectedCellCoordinates?.columnIndex &&
       cell.rowIndex === this.selectedCellCoordinates.rowIndex) {
-      return;
+      return false;
     }
     this.isDisplayContextMenu = false;
     if (!event.ctrlKey) {
