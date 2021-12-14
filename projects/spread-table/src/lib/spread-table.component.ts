@@ -17,6 +17,8 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   @Input() itemSize = 24;
   @Input() indexWidth = 60;
   @Input() rawData: any = null;
+  @Input() headerBgColor = '#634be3';
+  @Input() headerColor = '#efefef';
   // this needs to be a more complex object that contains dispayName and propertyName to be able to map from the rawData json
   @Input() columns: Column[] = [];
   data: Row[] = [];
@@ -667,7 +669,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     if (controlErrors) {
       Object.keys(controlErrors).forEach(key => {
         if (controlErrors[key])
-          cellErrors.push(`&bull;${controlErrors[key]}`);
+          cellErrors.push(`<i class="fas fa-exclamation-triangle"></i>${controlErrors[key]}`);
       });
     }
 

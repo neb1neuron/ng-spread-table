@@ -7,17 +7,23 @@
        class="">
     <div class="spread-thead w-100">
       <div class="columnHeader"
+           [style.background-color]="headerBgColor"
+           [style.color]="headerColor"
            [style.flex-basis]="indexWidth + 'px'"
            [style.flex-grow]="0">Index
         <div class="column-sizer"></div>
       </div>
       <ng-container *ngFor="let column of columns">
         <div class="columnHeader"
+             [style.background-color]="headerBgColor"
+             [style.color]="headerColor"
              [style.flex-basis]="(column.width || 100) + 'px'">{{column.displayName}}
           <div class="column-sizer"></div>
         </div>
       </ng-container>
-      <div class="columnHeader">
+      <div class="columnHeader"
+           [style.background-color]="headerBgColor"
+           [style.color]="headerColor">
       </div>
     </div>
   </div>
@@ -61,7 +67,7 @@
                      (blur)="setCellValue(columns[j],row.cells[j])"
                      [formControlName]="columns[j].name" />
               <span *ngIf="row.cells[j].errors"
-                    class="tooltiptext tooltip-bottom"
+                    class="validation-errors tooltiptext tooltip-bottom"
                     [innerHtml]="row.cells[j].errors"></span>
             </div>
           </div>
