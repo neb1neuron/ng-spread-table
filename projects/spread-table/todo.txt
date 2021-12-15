@@ -1,0 +1,3 @@
+To do list:
+- set changed property on changed cells add yellow background(maybe add original value to be able to revert changes)
+- trigger change event on cell value change
