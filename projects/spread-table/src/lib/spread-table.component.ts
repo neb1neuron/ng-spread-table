@@ -151,9 +151,9 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       this.isMouseDown = false;
     });
 
-    document.addEventListener("mouseup", () => {
-      this.clickResizeColumn({ pageX: 0 }, null);
-    });
+    // document.addEventListener("mouseup", () => {
+    //   this.clickResizeColumn({ pageX: 0 }, null);
+    // });
 
     this.table?.addEventListener("keydown", (e) => { this.keyDownCall(e) });
 
@@ -165,18 +165,8 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   }
 
   setColumnsWidth() {
-    //const headerWidth = Math.trunc(document.querySelector('table').clientWidth) - 1;
     const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
     document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
-    // const headerWidth = document.querySelector('.spread-thead').clientWidth;
-    // document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
-
-    // let columnTds = document.querySelectorAll('#spreadTableHeader .spread-thead div');
-    // let rowTds = document.querySelector('#spreadTable tr')?.querySelectorAll('td');
-    // if (!rowTds) return;
-    // for (let index = 0; index < rowTds.length; index++) {
-    //   columnTds[index]['style'].width = rowTds[index].getClientRects()[0].width + 'px';
-    // }
   }
 
   mouseUp() {
@@ -325,11 +315,6 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
           this.doubleClick(selectedCell);
           break;
         default:
-        // if (!event.ctrlKey && this.selectedCellCoordinates) {
-        //   let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
-        //   this.doubleClick(selectedCell);
-        //   this.form.get(this.columns[this.selectedCellCoordinates.columnIndex].name).setValue(event.key);
-        // }
       }
 
       if (event.ctrlKey) {
@@ -400,7 +385,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
         beforeValue: cell.value,
         afterValue: null
       });
-      this.setCellValueAndValidate(cell, null);
+      this.setCellValueAndValidate(cell, '');
     });
 
     if (changes.length > 0)
@@ -421,7 +406,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
         beforeValue: cell.value,
         afterValue: null
       });
-      this.setCellValueAndValidate(cell, null);
+      this.setCellValueAndValidate(cell, '');
     });
 
     if (changes.length > 0)
@@ -460,7 +445,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     let copyData: any[] = [];
 
     dataRows.forEach(dataRow => {
-      if (dataRow) {
+      if (dataRow || dataRow === '') {
         copyData.push(dataRow.split('\t'));
       }
     });
@@ -552,8 +537,10 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   cellClick(e: Event, cell: Cell) {
     let event = e as MouseEvent;
     if (event.button === 2 && cell.selected) {
+      this.isDisplayContextMenu = false;
       return false;
     }
+
     if (cell.columnIndex === this.selectedCellCoordinates?.columnIndex &&
       cell.rowIndex === this.selectedCellCoordinates.rowIndex) {
       return false;
@@ -578,7 +565,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     }
 
     return false; // prevent text selection
-  };
+  }
 
   selectTo(rowIndex: number, columnIndex: number) {
     let rowStart, rowEnd, cellStart, cellEnd;
@@ -615,9 +602,12 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   async openContextMenu(e: Event, cell: Cell) {
     const event = e as MouseEvent;
 
+    this.isMouseDown = false;
+
     if (event.ctrlKey) {
       return true;
     }
+
     // To prevent browser's default contextmenu
     e.preventDefault();
     e.stopPropagation();
@@ -635,7 +625,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
   handleMenuItemClick(event: any) {
     this.isDisplayContextMenu = false;
-    switch (event.data) {
+    switch (event.menuEvent) {
       case this.contextMenuActions.cut: {
         this.cutSelectedCellsValues();
         this.table?.focus();
