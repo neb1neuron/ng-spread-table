@@ -12,11 +12,13 @@ export class ContextMenuComponent {
 
   @Output() onContextMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
 
-  onContextMenuClick(event: any, data: any): any {
-    this.onContextMenuItemClick.emit({
-      event,
-      data,
-    });
+  onContextMenuClick(event: any, menuItem: ContextMenuModel): any {
+    if (!menuItem.disabled) {
+      this.onContextMenuItemClick.emit({
+        event: event,
+        menuEvent: menuItem.menuEvent
+      });
+    }
   }
 
 }
