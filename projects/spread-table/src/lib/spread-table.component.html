@@ -55,6 +55,7 @@
                [ngClass]="[isInEditMode(row.cells[j]) ? 'no-padding':'',
             row.cells[j]?.selected  ? 'selected' : '',
             row.cells[j]?.errors  ? 'has-errors' : '',
+            row.cells[j]?.value !==  row.cells[j]?.originalValue ? 'hasChanges' : '',
             column.editable ? '' : 'not-editable']"
                *ngFor="let column of columns;let j = index">
             <div style="height: 100%;"
@@ -77,6 +78,6 @@
   </cdk-virtual-scroll-viewport>
 </div>
 <app-context-menu #contextMenu
-                  *ngIf="contextMenuItems().length > 0 && isDisplayContextMenu"
-                  [contextMenuItems]="contextMenuItems()"
+                  *ngIf="contextMenuItems.length > 0 && isDisplayContextMenu"
+                  [contextMenuItems]="contextMenuItems"
                   (onContextMenuItemClick)="handleMenuItemClick($event)"></app-context-menu>

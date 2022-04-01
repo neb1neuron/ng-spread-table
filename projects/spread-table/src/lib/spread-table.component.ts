@@ -1,7 +1,7 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
-import { SpreadTable } from './models/ispread-table';
+import { ISpreadTable, SpreadTable } from './models/ispread-table';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
 
@@ -19,8 +19,12 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   @Input() rawData: any = null;
   @Input() headerBgColor = '#634be3';
   @Input() headerColor = '#efefef';
-  // this needs to be a more complex object that contains dispayName and propertyName to be able to map from the rawData json
   @Input() columns: Column[] = [];
+  @Input() extraContextMenuItems: ContextMenuModel[] = [];
+
+  @Output() cellValueChange = new EventEmitter<Change[]>();
+  @Output() contextMenuEvent = new EventEmitter<ContextMenuModel>();
+
   data: Row[] = [];
 
   focus = true;
@@ -49,8 +53,10 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
   editableContextMenu = false;
 
-  contextMenuItems(): Array<ContextMenuModel> {
-    return [{
+  contextMenuItems: ContextMenuModel[] = [];
+
+  createContextMenuItems() {
+    let items: ContextMenuModel[] = [{
       faIconName: 'far fa-copy',
       menuText: 'Copy',
       disabled: true,
@@ -82,8 +88,15 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       menuEvent: this.contextMenuActions.redo,
       shortcut: 'Ctrl+Y',
       disabled: !this.editableContextMenu
-    },]
-  };
+    }];
+
+    if (this.extraContextMenuItems?.length) {
+      items.push(...this.extraContextMenuItems);
+    }
+
+    this.contextMenuItems = items;
+  }
+
   contextMenuPosition: any;
 
   @ViewChild('contextMenu', { read: ElementRef }) set contextMenu(element: ElementRef) {
@@ -113,6 +126,22 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     super();
   }
 
+  public getSelectedCells(): Cell[] {
+    let selectedCells: Cell[] = [];
+    this.data.forEach(r => selectedCells = selectedCells.concat(r.cells.filter(d => d.selected)));
+    return selectedCells;
+  }
+
+  getData() {
+    return this.data.map(row => {
+      let dataRow = {};
+      row.cells.map(cell => {
+        dataRow[cell.columnName] = cell.value
+      });
+      return dataRow;
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     let data: Row[] = [];
     if (changes.rawData.currentValue) {
@@ -120,7 +149,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
         let row = new Row({ rowIndex: i, cells: [] });
 
         for (let j = 0; j < this.columns.length; j++) {
-          row.cells.push({ columnName: this.columns[j].name, value: this.rawData[i][this.columns[j].name], rowIndex: i, columnIndex: j });
+          row.cells.push({ columnName: this.columns[j].name, value: this.rawData[i][this.columns[j].name], originalValue: this.rawData[i][this.columns[j].name], rowIndex: i, columnIndex: j });
         }
         data.push(row);
       }
@@ -346,6 +375,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
   undo() {
     const lastChange = this.undoRedoService.undo();
+    let changes: Change[] = [];
     if (lastChange) {
       this.clearSelection();
       lastChange.forEach(change => {
@@ -354,12 +384,21 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
           this.setCellValueAndValidate(cellData, change.beforeValue);
           cellData.selected = true;
         }
+
+        changes.push({
+          coordinates:
+            { rowIndex: change.coordinates.rowIndex, columnIndex: change.coordinates.columnIndex },
+          beforeValue: change.afterValue,
+          afterValue: change.beforeValue
+        });
       });
+      this.cellValueChange.emit(changes);
     }
   }
 
   redo() {
     const lastChange = this.undoRedoService.redo();
+    let changes: Change[] = [];
     if (lastChange) {
       this.clearSelection();
       lastChange.forEach(change => {
@@ -368,7 +407,15 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
           this.setCellValueAndValidate(cellData, change.beforeValue);
           cellData.selected = true;
         }
+
+        changes.push({
+          coordinates:
+            { rowIndex: change.coordinates.rowIndex, columnIndex: change.coordinates.columnIndex },
+          beforeValue: change.afterValue,
+          afterValue: change.beforeValue
+        });
       });
+      this.cellValueChange.emit(changes);
     }
   }
 
@@ -383,13 +430,15 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
         coordinates:
           { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
         beforeValue: cell.value,
-        afterValue: null
+        afterValue: ''
       });
       this.setCellValueAndValidate(cell, '');
     });
 
-    if (changes.length > 0)
+    if (changes.length > 0) {
       this.undoRedoService.setChange(changes);
+      this.cellValueChange.emit(changes);
+    }
   }
 
   async cutSelectedCellsValues() {
@@ -404,13 +453,15 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
         coordinates:
           { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
         beforeValue: cell.value,
-        afterValue: null
+        afterValue: ''
       });
       this.setCellValueAndValidate(cell, '');
     });
 
-    if (changes.length > 0)
+    if (changes.length > 0) {
       this.undoRedoService.setChange(changes);
+      this.cellValueChange.emit(changes);
+    }
   }
 
   handleCopy = async () => {
@@ -418,18 +469,26 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     let selectedCells: Cell[] = [];
     this.data.forEach(r => selectedCells = selectedCells.concat(r.cells.filter(d => d.selected)));
     this.clearSelection();
-    const data = this.groupBy(selectedCells, c => c.rowIndex);
+    const data = this.groupBy<Cell, number>(selectedCells, c => c.rowIndex);
     let copyString = '';
 
     data.forEach(valuesRow => {
       valuesRow.map((c: Cell) => {
-        copyString += `${c.value}\t`; setTimeout(() => {
+        copyString += `${c.value}\t`;
+        setTimeout(() => {
           c.selected = true;
         }, 200);
       });
-      copyString = copyString.trimEnd();
-      copyString += '\r\n';
+      if (copyString.trim().length > 0) {
+        copyString = copyString.trimEnd();
+      } else {
+        copyString = copyString.slice(0, -1);
+      }
+      if (valuesRow !== data.get([...data][data.size - 1][0])) {
+        copyString += '\r\n';
+      }
     });
+
     await navigator.clipboard.writeText(copyString);
   }
 
@@ -438,7 +497,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     let pastedData;
 
     pastedData = await navigator.clipboard.readText();
-    if (!pastedData) return;
+    if (!pastedData && pastedData !== '') return;
 
     const dataRows = pastedData.split('\r\n');
 
@@ -481,7 +540,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
           if (cellColumnIndex - columnIndexDifference > copyData[cellRowIndex - rowIndexDifference].length - 1) continue;
         }
 
-        const value = copyData ? copyData[cellRowIndex - rowIndexDifference][cellColumnIndex - columnIndexDifference] : null;
+        const value = copyData ? copyData[cellRowIndex - rowIndexDifference][cellColumnIndex - columnIndexDifference] || '' : '';
 
         changes.push({
           coordinates:
@@ -498,21 +557,26 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       }
     }
 
-    if (changes.length > 0)
+    if (changes.length > 0) {
       this.undoRedoService.setChange(changes);
+      this.cellValueChange.emit(changes);
+    }
   }
 
   setCellValue(column: Column, cell: Cell) {
     if (cell.value !== this.form.value[column.name]) {
-      this.undoRedoService.setChange([{
+      const changes = [{
         coordinates:
           { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
         beforeValue: cell.value,
         afterValue: this.form.value[column.name]
-      }]);
+      }];
+      this.undoRedoService.setChange(changes);
+      this.cellValueChange.emit(changes);
       cell.value = this.form.value[column.name];
 
       this.setCellValueAndValidate(cell, this.form.value[column.name]);
+
     }
 
     this.isEditMode = false;
@@ -543,7 +607,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
     if (cell.columnIndex === this.selectedCellCoordinates?.columnIndex &&
       cell.rowIndex === this.selectedCellCoordinates.rowIndex) {
-      return false;
+      return true;
     }
     this.isDisplayContextMenu = false;
     if (!event.ctrlKey) {
@@ -619,6 +683,8 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     this.editableContextMenu = this.columns[cell.columnIndex].editable || false;
     this.isDisplayContextMenu = true;
 
+    this.createContextMenuItems();
+
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     return true;
   }
@@ -649,6 +715,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       default:
         break;
     }
+    this.contextMenuEvent.emit(this.contextMenuItems.find(item => item.menuEvent === event.menuEvent));
   }
 
   private setCellValueAndValidate(cell: Cell, value: any) {

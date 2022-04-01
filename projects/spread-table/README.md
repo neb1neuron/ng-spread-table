@@ -141,6 +141,13 @@ columns: Column[] = [
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
 
 ## Versions
+### v2.4.1
+- fix some bughs regarding copy and paste
+- added ability to extend context menu options. You can now catch events fired by the context menu(contextMenuEvent)
+- added cell value change events(cellValueChange)
+- added getData method to get data from the grid
+- added getSelectedCells method that returns the selected cells in the grid
+- change highlight(yellow). originalValue property on every cell to be able to mark the cell as a change if value !== originalValue.
 
 ### v2.0.0
 

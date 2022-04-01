@@ -1,3 +1,11 @@
 To do list:
+1/4/2022
 - set changed property on changed cells add yellow background(maybe add original value to be able to revert changes)
 - trigger change event on cell value change
+- add ability to add items in context menu and output event(separator also added)
+- get data
+
+*
+- add column
+- rename column
+- delete column

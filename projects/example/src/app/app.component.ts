@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Column } from 'spread-table';
+import { Column, Change, ContextMenuModel, SpreadTable } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
 
 @Component({
@@ -19,6 +19,30 @@ export class AppComponent {
 
   data: any;
 
+  gridInstance: SpreadTable = new SpreadTable();
+
+  @ViewChild('spreadTable') set grid(gridInstance: SpreadTable) {
+    this.gridInstance = gridInstance;
+  }
+
+  extraContextMenuItems: ContextMenuModel[] =
+    [{
+      menuText: 'separator'
+    }, {
+      faIconName: 'fas fa-american-sign-language-interpreting',
+      menuText: 'Action2',
+      menuEvent: 'action1Event',
+      shortcut: 'Ctrl+?',
+      disabled: false,
+    },
+    {
+      faIconName: 'fas fa-archway',
+      menuText: 'Action 2',
+      menuEvent: 'action2Event',
+      shortcut: 'Ctrl+?',
+      disabled: true
+    },];
+
   constructor(private httpClient: HttpClient) {
     this.getData();
   }
@@ -27,5 +51,30 @@ export class AppComponent {
     const products: any = await lastValueFrom(this.httpClient.get('../assets/data.json'));
 
     this.data = products;
+  }
+
+  // addColumn() {
+  //   this.gridInstance.columns.push(new Column({ displayName: 'New Column', name: 'aaa', width: 150 }));
+  // }
+
+  getSpreadTable() {
+    console.log(this.gridInstance);
+  }
+
+  getSelectedCells() {
+    console.log(this.gridInstance.getSelectedCells());
+  }
+
+  getGridData() {
+    console.log(this.gridInstance.getData());
+  }
+
+
+  onCellValueChange(event: Change[]) {
+    console.log('changes:', event);
+  }
+
+  onContextMenuEvent(event: ContextMenuModel) {
+    console.log('contextMenuEvent', event);
   }
 }

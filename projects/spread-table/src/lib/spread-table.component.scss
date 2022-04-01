@@ -424,8 +424,18 @@ cdk-virtual-scroll-viewport {
       box-shadow: 0 1px 4px 1px #00000013;
     }
 
+    &.hasChanges {
+      background-color: #fff89b;
+      transition: background-color 0.1s ease-in;
+    }
+
     &.selected {
       background-color: rgb(219, 242, 255);
+      transition: background-color 0.1s ease-in;
+    }
+
+    &.selected.hasChanges {
+      background-color: #e8f5bd;
       transition: background-color 0.1s ease-in;
     }
 

@@ -1,6 +1,7 @@
 export class Cell {
   public columnName = '';
   public value?: any;
+  public originalValue?: any;
   public selected?= false;
   public disabled?= false;
   public rowIndex = 0;

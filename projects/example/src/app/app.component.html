@@ -1,7 +1,17 @@
+<button (click)="getSpreadTable()">Get spread table</button>
+<!-- <button (click)="addColumn()">Add Column</button> -->
+<button (click)="getSelectedCells()">Selected Cells</button>
+<button (click)="getGridData()">Get Data</button>
 <div class="p-3 w-100"
      style="height: 700px;">
-  <spread-table [columns]="columns"
+  <spread-table #spreadTable
+                [columns]="columns"
                 [itemSize]="30"
                 [indexWidth]="60"
-                [rawData]="data"></spread-table>
+                [rawData]="data"
+                [extraContextMenuItems]="extraContextMenuItems"
+                (cellValueChange)="onCellValueChange($event)"
+                (contextMenuEvent)="onContextMenuEvent($event)">
+
+  </spread-table>
 </div>

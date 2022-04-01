@@ -1,12 +1,17 @@
 <div class="context-menu">
-   <div class="menu-link"
-        [ngClass]="menuItem.disabled?'disabled':'enabled hover-icon-pop'"
-        *ngFor="let menuItem of contextMenuItems; index as i"
-        (click)="onContextMenuClick($event, menuItem)">
+  <ng-container *ngFor="let menuItem of contextMenuItems; index as i">
+    <div *ngIf="menuItem.menuText !== 'separator'"
+         class="menu-link"
+         [ngClass]="menuItem.disabled?'disabled':'enabled hover-icon-pop'"
+         (click)="onContextMenuClick($event, menuItem)">
       <i *ngIf="menuItem.faIconName"
          class="{{menuItem.faIconName}}"></i>&nbsp;
       {{ menuItem.menuText }}
       <span class="shortcut"
             *ngIf="menuItem?.shortcut">{{menuItem?.shortcut}}</span>
-   </div>
+    </div>
+    <div *ngIf="menuItem.menuText === 'separator'"
+         class="separator">
+    </div>
+  </ng-container>
 </div>

@@ -1,16 +1,45 @@
-import { Injectable, Input } from "@angular/core";
-import { Column, Row } from "./cell.model";
+import { EventEmitter, Injectable, Input } from "@angular/core";
+import { Change } from "../services/undo-redo.service";
+import { Cell, Column } from "./cell.model";
+import { ContextMenuModel } from "./context-menu.model";
 
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
 export class SpreadTable {
+  // inputs
+  columnWidth: number;
+  itemSize: number;
+  indexWidth: number;
+  rawData: any;
+  headerBgColor: string;
+  headerColor: string;
+  columns: Column[] = [];
+
+  //outputs
+  cellValueChange: EventEmitter<Change[]>;
+  contextMenuEvent: EventEmitter<ContextMenuModel>;
+
+  getSelectedCells() { }
+  getData() { }
+
+  constructor() {
+  }
 }
 
 export interface ISpreadTable {
-  columnWidth:number;
+  // inputs
+  columnWidth: number;
+  itemSize: number;
+  indexWidth: number;
   rawData: any;
-  // this needs to be a more complex object that contains dispayName and propertyName to be able to map from the rawData json
+  headerBgColor: string;
+  headerColor: string;
   columns: Column[];
-  data: Row[];
+
+  //outputs
+  cellValueChange: EventEmitter<Change[]>;
+  contextMenuEvent: EventEmitter<ContextMenuModel>;
+
+  getSelectedCells(): Cell[];
 }

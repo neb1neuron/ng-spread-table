@@ -8,7 +8,7 @@ import { ContextMenuModel } from '.././models/context-menu.model';
 })
 export class ContextMenuComponent {
 
-  @Input() contextMenuItems: Array<ContextMenuModel> = [];
+  @Input() contextMenuItems: ContextMenuModel[] = [];
 
   @Output() onContextMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
 
