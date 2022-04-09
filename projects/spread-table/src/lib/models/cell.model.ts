@@ -28,8 +28,9 @@ export class Row {
 export class Column {
   public name = '';
   public displayName?= 'N/A';
-  public width?= 100;
+  public minWidth?= 100;
   public editable?= true;
+  public resizable?= true;
   public validators?: any[] | undefined;
 
   constructor(obj?: Column) {

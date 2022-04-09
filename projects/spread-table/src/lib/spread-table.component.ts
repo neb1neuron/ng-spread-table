@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
-import { ISpreadTable, SpreadTable } from './models/ispread-table';
+import { SpreadTable } from './models/ispread-table';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
 
@@ -24,6 +24,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
   @Output() cellValueChange = new EventEmitter<Change[]>();
   @Output() contextMenuEvent = new EventEmitter<ContextMenuModel>();
+  @Output() columnMenuEvent = new EventEmitter<ContextMenuModel>();
 
   data: Row[] = [];
 
@@ -38,10 +39,12 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   endCellIndex = 0;
   selectedCellCoordinates?: { rowIndex: number, columnIndex: number } = undefined;
   isEditMode = false;
-  columnBeingResized = null;
-  columnResizesStartX = 0;
+  columnBeingResized: Column = null;
+  htmlColumnBeingResized = null;
+  originalColumnsWidth = {};
 
   isDisplayContextMenu: boolean = false;
+  isDisplayColumnMenu: boolean = false;
 
   contextMenuActions = {
     copy: 'copy',
@@ -51,9 +54,15 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     redo: 'redo',
   };
 
+  columnMenuActions = {
+    resetColumn: 'resetColumn',
+    resetAllColumns: 'resetAllColumns'
+  };
+
   editableContextMenu = false;
 
   contextMenuItems: ContextMenuModel[] = [];
+  columnMenuItems: ContextMenuModel[] = [];
 
   createContextMenuItems() {
     let items: ContextMenuModel[] = [{
@@ -97,12 +106,31 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     this.contextMenuItems = items;
   }
 
-  contextMenuPosition: any;
+  createColumnMenuItems() {
+    let items: ContextMenuModel[] = [{
+      faIconName: 'fas fa-list',
+      menuText: 'Reset Column',
+      menuEvent: this.columnMenuActions.resetColumn
+    },
+    {
+      faIconName: 'fas fa-list',
+      menuText: 'Reset All Columns',
+      menuEvent: this.columnMenuActions.resetAllColumns
+    }];
+
+    // if (this.extraContextMenuItems?.length) {
+    //   items.push(...this.extraContextMenuItems);
+    // }
+
+    this.columnMenuItems = items;
+  }
+
+  contextMenuPosition: { x: number, y: number } | any;
 
   @ViewChild('contextMenu', { read: ElementRef }) set contextMenu(element: ElementRef) {
     if (element) {
       const wrapper = this.table?.parentElement?.parentElement?.parentElement;
-      element.nativeElement.setAttribute('style', `position: fixed;left: 0px;top: 0px;`);
+      element.nativeElement.setAttribute('style', `position: fixed;left: 0px;top: 0px;z-index:100;`);
       let wrapperWidth = 9999999;
       let wrapperHeight = 9999999;
 
@@ -116,9 +144,33 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       this.contextMenuPosition.x = this.contextMenuPosition.x + contextMenuWidth > wrapperWidth ? this.contextMenuPosition.x - contextMenuWidth : this.contextMenuPosition.x;
       this.contextMenuPosition.y = this.contextMenuPosition.y + contextMenuHeight > wrapperHeight ? this.contextMenuPosition.y - contextMenuHeight : this.contextMenuPosition.y;
 
-      element.nativeElement.setAttribute('style', `position: fixed;left: ${this.contextMenuPosition.x}px;top: ${this.contextMenuPosition.y}px;`);
+      element.nativeElement.setAttribute('style', `position: fixed;left: ${this.contextMenuPosition.x}px;top: ${this.contextMenuPosition.y}px;z-index:100;`);
     } else {
       this.contextMenuPosition = {};
+    }
+  }
+
+  columnMenuPosition: { x: number, y: number } | any;
+  @ViewChild('columnMenu', { read: ElementRef }) set columnMenu(element: ElementRef) {
+    if (element) {
+      const wrapper = this.table?.parentElement?.parentElement?.parentElement;
+      element.nativeElement.setAttribute('style', `position: fixed;left: 0px;top: 0px;z-index:100;`);
+      let wrapperWidth = 9999999;
+      let wrapperHeight = 9999999;
+
+      if (wrapper) {
+        wrapperWidth = wrapper.clientWidth + wrapper.offsetLeft;
+        wrapperHeight = wrapper.clientHeight + wrapper.offsetTop;
+      }
+      const columnMenuWidth = element?.nativeElement.clientWidth;
+      const columnMenuHeight = element?.nativeElement.clientHeight;
+
+      this.columnMenuPosition.x = this.columnMenuPosition.x + columnMenuWidth > wrapperWidth ? this.columnMenuPosition.x - columnMenuWidth : this.columnMenuPosition.x;
+      this.columnMenuPosition.y = this.columnMenuPosition.y + columnMenuHeight > wrapperHeight ? this.columnMenuPosition.y - columnMenuHeight : this.columnMenuPosition.y;
+
+      element.nativeElement.setAttribute('style', `position: fixed;left: ${this.columnMenuPosition.x}px;top: ${this.columnMenuPosition.y}px;z-index:100;`);
+    } else {
+      this.columnMenuPosition = {};
     }
   }
 
@@ -157,9 +209,15 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       this.data = [...data];
 
       setTimeout(() => {
-        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.width || 100).reduce((a, b) => a + b, 0) + 10) + 'px';
+        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.minWidth || 100).reduce((a, b) => a + b, 0) + 10) + 'px';
         this.setupTableEvents();
       }, 0);
+    }
+
+    if (this.columns?.length > 0) {
+      this.columns.map(c => {
+        this.originalColumnsWidth[c.name] = c.minWidth || 100;
+      });
     }
   }
 
@@ -170,7 +228,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   setupTableEvents() {
     this.table = document.getElementById('spreadTable');
 
-    document.addEventListener('scroll', (e) => this.isDisplayContextMenu = false, true);
+    document.addEventListener('scroll', (e) => { this.isDisplayContextMenu = false; this.isDisplayColumnMenu = false; }, true);
 
     this.table?.addEventListener("selectstart", () => {
       return false;
@@ -180,22 +238,24 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       this.isMouseDown = false;
     });
 
-    // document.addEventListener("mouseup", () => {
-    //   this.clickResizeColumn({ pageX: 0 }, null);
-    // });
-
     this.table?.addEventListener("keydown", (e) => { this.keyDownCall(e) });
 
     this.setColumnsWidth();
 
-    document.addEventListener("mousemove", (e) => { if (this.columnBeingResized) this.resizeColumn(e); })
-
     window.addEventListener('resize', this.setColumnsWidth);
   }
 
-  setColumnsWidth() {
+  setColumnsWidth = () => {
     const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
-    document.querySelector('cdk-virtual-scroll-viewport')['style'].width = headerWidth + 'px';
+    const columnsWidthSum = this.columns.map(c => { return c.minWidth || 100 }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
+    document.querySelector('cdk-virtual-scroll-viewport')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+    document.getElementById('spread-table-header')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+    if (headerWidth > columnsWidthSum) {
+      this.columns.map(c => {
+        const percentage = (c.minWidth || 100) * 100 / (columnsWidthSum - this.indexWidth - 10);
+        c.minWidth = c.minWidth + ((headerWidth - columnsWidthSum) * percentage / 100);
+      });
+    }
   }
 
   mouseUp() {
@@ -217,6 +277,8 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
   doubleClick(cell: Cell) {
     if (this.selectedCellCoordinates?.rowIndex === cell.rowIndex && this.selectedCellCoordinates.columnIndex === cell.columnIndex && this.isEditMode) return;
     this.clearSelection();
+    this.isDisplayColumnMenu = false;
+    this.isDisplayContextMenu = false;
     this.isMouseDown = false;
     this.isEditMode = true;
     this.focus = true;
@@ -602,6 +664,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     let event = e as MouseEvent;
     if (event.button === 2 && cell.selected) {
       this.isDisplayContextMenu = false;
+      this.isDisplayColumnMenu = false;
       return false;
     }
 
@@ -610,6 +673,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
       return true;
     }
     this.isDisplayContextMenu = false;
+    this.isDisplayColumnMenu = false;
     if (!event.ctrlKey) {
       this.clearSelection();
     }
@@ -682,11 +746,34 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
 
     this.editableContextMenu = this.columns[cell.columnIndex].editable || false;
     this.isDisplayContextMenu = true;
+    this.isDisplayColumnMenu = false;
 
     this.createContextMenuItems();
 
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     return true;
+  }
+
+  // columnmneu
+  async openColumnMenu(e: Event, column: Column) {
+    this.isDisplayColumnMenu = false;
+    e.preventDefault();
+    e.stopPropagation();
+    setTimeout(() => {
+      const event = e as MouseEvent;
+
+      this.isMouseDown = false;
+
+      //this.editableColumnMenu = true;
+      this.isDisplayColumnMenu = true;
+      this.isDisplayContextMenu = false;
+
+      this.createColumnMenuItems();
+
+      this.columnMenuPosition = { x: event.clientX, y: event.clientY, column: column };
+      return true;
+
+    }, 50);
   }
 
   handleMenuItemClick(event: any) {
@@ -716,6 +803,27 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
         break;
     }
     this.contextMenuEvent.emit(this.contextMenuItems.find(item => item.menuEvent === event.menuEvent));
+  }
+
+  handleColumnMenuItemClick(event: any) {
+    this.isDisplayColumnMenu = false;
+    switch (event.menuEvent) {
+      case this.columnMenuActions.resetColumn: {
+
+        this.columnMenuPosition.column.minWidth = this.originalColumnsWidth[this.columnMenuPosition.column.name];
+        this.setColumnsWidth();
+        this.table?.focus();
+        break;
+      }
+      case this.columnMenuActions.resetAllColumns: {
+        this.resetColumnWidths();
+        this.table?.focus();
+        break;
+      }
+      default:
+        break;
+    }
+    this.columnMenuEvent.emit(this.columnMenuItems.find(item => item.menuEvent === event.menuEvent));
   }
 
   private setCellValueAndValidate(cell: Cell, value: any) {
@@ -748,19 +856,36 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     return map;
   }
 
-  clickResizeColumn(event, column: Column) {
+  clickResizer(event, column: Column) {
+    event.preventDefault();
     this.columnBeingResized = column;
-    this.columnResizesStartX = event.x;
+    this.htmlColumnBeingResized = event.target?.closest(".columnHeader");
+    console.log("initial width", event.target?.closest(".columnHeader").getBoundingClientRect().width);
+    document.addEventListener('mousemove', this.resize);
+    document.addEventListener('mouseup', this.stopResize);
   }
 
-  resizeColumn(event) {
+  resize = (event) => {
     if (this.columnBeingResized) {
-      const finalWidth = (this.columnBeingResized.width || 100) + (event.x - this.columnResizesStartX);
-      if (finalWidth > 100) {
-        this.columnBeingResized.width = finalWidth;
-        this.setColumnsWidth();
-        console.log(event);
-      }
+      const { left } = this.htmlColumnBeingResized?.getBoundingClientRect() || 0;
+      this.columnBeingResized.minWidth = Math.max(event.pageX - left, 100);
+      const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
+      const columnsWidthSum = this.columns.map(c => { return c.minWidth || 100 }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
+      document.querySelector('cdk-virtual-scroll-viewport')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+      document.getElementById('spread-table-header')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
     }
+  }
+
+  stopResize = () => {
+    this.columnBeingResized = null;
+    document.removeEventListener('mousemove', this.resize);
+    document.removeEventListener('mouseup', this.stopResize);
+  }
+
+  resetColumnWidths() {
+    this.columns.map(c => {
+      c.minWidth = this.originalColumnsWidth[c.name];
+    });
+    this.setColumnsWidth();
   }
 }

@@ -3,27 +3,32 @@
      [formGroup]="form">
   <div id="widthReference"></div>
 
-  <div tabindex="-1"
+  <div id="spread-table-header"
+       tabindex="-1"
        class="">
-    <div class="spread-thead w-100">
+    <div class="spread-thead w-100"
+         [style.background]="headerBgColor"
+         [style.color]="headerColor"
+         (mousedown)="isDisplayContextMenu = false;isDisplayColumnMenu = false;">
       <div class="columnHeader"
-           [style.background-color]="headerBgColor"
-           [style.color]="headerColor"
-           [style.flex-basis]="indexWidth + 'px'"
-           [style.flex-grow]="0">Index
-        <div class="column-sizer"></div>
+           [style.flex-grow]="0"
+           [style.width]="indexWidth + 'px'">
+        <div class=""
+             style="color:inherit">Index</div>
       </div>
       <ng-container *ngFor="let column of columns">
         <div class="columnHeader"
-             [style.background-color]="headerBgColor"
-             [style.color]="headerColor"
-             [style.flex-basis]="(column.width || 100) + 'px'">{{column.displayName}}
-          <div class="column-sizer"></div>
+             [style.width]="(column.minWidth || 100) + 'px'">
+          <div class="column-name">{{column.displayName}}</div>
+          <div class="column-menu"
+               (mousedown)="openColumnMenu($event, column)"><i class="fas fa-bars"></i></div>
+          <div *ngIf="column.resizable"
+               class="column-sizer"
+               (mousedown)="clickResizer($event, column)"
+               (dblclick)="resetColumnWidths();"></div>
         </div>
       </ng-container>
-      <div class="columnHeader"
-           [style.background-color]="headerBgColor"
-           [style.color]="headerColor">
+      <div class="columnHeader">
       </div>
     </div>
   </div>
@@ -41,13 +46,13 @@
         <div class="spread-row"
              *cdkVirtualFor="let row of data;let i = index">
           <div class="spread-cell"
-               [style.flex-basis]="indexWidth + 'px'"
                [style.height]="itemSize+'px'"
-               [style.flex-grow]="0">{{row.rowIndex}}</div>
+               [style.width]="indexWidth + 'px'"
+               [style.flex-grow]="0"><span>{{row.rowIndex}}</span></div>
           <div #spreadCell
-               [style.flex-basis]="(column.width || 100) + 'px'"
                class="spread-cell"
                [style.height]="itemSize+'px'"
+               [style.width]="column.minWidth + 'px'"
                (contextmenu)="openContextMenu($event,row.cells[j]);"
                (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"
                (mousedown)="cellClick($event,row.cells[j])"
@@ -59,7 +64,7 @@
             column.editable ? '' : 'not-editable']"
                *ngFor="let column of columns;let j = index">
             <div style="height: 100%;"
-                 class="error tooltip w-100">
+                 class="error tooltip">
               <div class="spread-cell-value hideextra"
                    *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div>
               <input *ngIf="isInEditMode(row.cells[j])"
@@ -81,3 +86,7 @@
                   *ngIf="contextMenuItems.length > 0 && isDisplayContextMenu"
                   [contextMenuItems]="contextMenuItems"
                   (onContextMenuItemClick)="handleMenuItemClick($event)"></app-context-menu>
+<app-context-menu #columnMenu
+                  *ngIf="columnMenuItems.length > 0 && isDisplayColumnMenu"
+                  [contextMenuItems]="columnMenuItems"
+                  (onContextMenuItemClick)="handleColumnMenuItemClick($event)"></app-context-menu>

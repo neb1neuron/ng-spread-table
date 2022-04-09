@@ -16,7 +16,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    ScrollingModule,
+    ScrollingModule
   ],
   exports: [SpreadTableComponent]
 })

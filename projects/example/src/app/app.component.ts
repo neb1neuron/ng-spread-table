@@ -11,11 +11,11 @@ import { RequiredValidator } from './custom-validators/required-validator';
 })
 export class AppComponent {
   columns: Column[] = [
-    new Column({ displayName: 'Id', name: 'id', editable: false }),
-    new Column({ displayName: 'Album Id', name: 'albumId', width: 120 }),
-    new Column({ displayName: 'Title', name: 'title', width: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
-    new Column({ displayName: 'Url', name: 'url', width: 300 }),
-    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', width: 300 })];
+    new Column({ displayName: 'Id', name: 'id', editable: false, resizable: false }),
+    new Column({ displayName: 'Album Id', name: 'albumId', minWidth: 120 }),
+    new Column({ displayName: 'Title', name: 'title', minWidth: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
+    new Column({ displayName: 'Url', name: 'url', minWidth: 300 }),
+    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300 })];
 
   data: any;
 
@@ -54,11 +54,13 @@ export class AppComponent {
   }
 
   // addColumn() {
-  //   this.gridInstance.columns.push(new Column({ displayName: 'New Column', name: 'aaa', width: 150 }));
+  //   this.gridInstance.columns.push(new Column({ displayName: 'New Column', name: 'aaa', minWidth: 150 }));
   // }
 
   getSpreadTable() {
     console.log(this.gridInstance);
+    this.gridInstance.headerBgColor = this.randomColor().backgroundColor;
+    this.gridInstance.headerColor = this.randomColor().color;
   }
 
   getSelectedCells() {
@@ -76,5 +78,38 @@ export class AppComponent {
 
   onContextMenuEvent(event: ContextMenuModel) {
     console.log('contextMenuEvent', event);
+  }
+
+  private randomColor = () => {
+    let color = Math.floor(Math.random() * 16777215).toString(16)
+
+    /* sometimes the returned value does not have
+     * the 6 digits needed, so we do it again until
+     * it does
+     */
+
+    while (color.length < 6) {
+      color = Math.floor(Math.random() * 16777215).toString(16)
+    }
+
+    let red = parseInt(color.substring(0, 2), 16)
+    let green = parseInt(color.substring(2, 4), 16)
+    let blue = parseInt(color.substring(4, 6), 16)
+    let brightness = red * 0.299 + green * 0.587 + blue * 0.114
+
+    /* if (red*0.299 + green*0.587 + blue*0.114) > 180
+     * use #000000 else use #ffffff
+     */
+
+    if (brightness > 180) {
+      return {
+        backgroundColor: '#' + color,
+        color: '#000000'
+      }
+    }
+    else return {
+      backgroundColor: '#' + color,
+      color: '#ffffff'
+    }
   }
 }
