@@ -9,3 +9,9 @@ To do list:
 - add column
 - rename column
 - delete column
+- column menu, reset column, reset all columns
+
+!!! Document functionality so far and make a deploy
+- view to interface grid: methods and public memberss
+- context menu extensibility
+- columns properties
