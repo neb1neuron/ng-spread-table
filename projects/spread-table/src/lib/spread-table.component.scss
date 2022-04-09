@@ -84,6 +84,7 @@ $red: #dc3545;
     color: #006080;
     display: grid;
     align-items: center;
+    width: 100%;
   }
 
   .tooltip .tooltiptext {
@@ -399,11 +400,8 @@ cdk-virtual-scroll-viewport {
     word-wrap: break-word;
     background-color: #fff;
     transition: background-color 0.1s ease-in;
-    //border: 1px solid #dde2eb;
     line-height: 24px;
     text-align: left;
-    flex-grow: 1;
-    flex-shrink: 0;
 
     &.not-editable {
       background-color: #eeeeee;
@@ -464,40 +462,57 @@ cdk-virtual-scroll-viewport {
 }
 
 .spread-thead {
-  z-index: 99999;
+  z-index: 99;
   position: relative;
   font-weight: 600;
   display: inline-flex;
 
   .columnHeader {
-    background: #f8f8f8;
-    // border: 1px solid #dde2eb;
-    // border-left: 1px solid #f8f8f8;
-    // border-right: none;
+    background: inherit;
+    color: inherit;
     height: 46px;
     padding: 3px 8px;
     text-align: left;
     cursor: default;
     display: flex;
     align-items: center;
-    flex-grow: 1;
-    flex-shrink: 0;
-    justify-content: space-between;
     user-select: none;
+    display: flex;
+    justify-content: flex-end;
+
+    .column-menu {
+      padding: 3px 8px;
+      color: #8888887b;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
 
     .column-sizer {
-      width: 1px;
-      // cursor: col-resize;
-      background: #00000099;
+      width: 2px;
+      cursor: col-resize;
+      background: #ffffff78;
       border-radius: 5px;
       height: 70%;
       position: relative;
       margin-right: -9px;
-    }
-  }
+      display: block;
+      border-right: 1px solid #00000078;
 
-  .columnHeader:first-of-type {
-    //border-left: 1px solid #dde2eb;
+      &:hover {
+        background: #ffffff;
+        border-right: 1px solid rgb(0, 0, 0);
+      }
+    }
+
+    .column-name {
+      flex: 1;
+      white-space: nowrap;
+      color: inherit;
+      background: inherit;
+      color: inherit;
+    }
   }
 
   .columnHeader:last-of-type {
@@ -506,13 +521,11 @@ cdk-virtual-scroll-viewport {
     flex-basis: 10px;
     padding: 0;
     border: 0;
-    // border-top: 1px solid #dde2eb;
-    // border-right: 1px solid #dde2eb;
   }
 }
 
 .spread-row {
-  z-index: 99998;
+  z-index: 98;
   display: inline-flex;
   width: 100%;
 
@@ -531,8 +544,6 @@ cdk-virtual-scroll-viewport {
   cursor: default;
   display: flex;
   align-items: center;
-  flex-grow: 1;
-  flex-shrink: 0;
 }
 
 #widthReference {
