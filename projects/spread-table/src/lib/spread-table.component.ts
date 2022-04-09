@@ -860,7 +860,6 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     event.preventDefault();
     this.columnBeingResized = column;
     this.htmlColumnBeingResized = event.target?.closest(".columnHeader");
-    console.log("initial width", event.target?.closest(".columnHeader").getBoundingClientRect().width);
     document.addEventListener('mousemove', this.resize);
     document.addEventListener('mouseup', this.stopResize);
   }
