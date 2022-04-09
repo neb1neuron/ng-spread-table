@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Column, Change, ContextMenuModel, SpreadTable } from 'spread-table';
+import { Column, Change, ContextMenuModel, SpreadTable, ISpreadTable } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
 
 @Component({
@@ -19,7 +19,7 @@ export class AppComponent {
 
   data: any;
 
-  gridInstance: SpreadTable = new SpreadTable();
+  gridInstance: ISpreadTable = new SpreadTable();
 
   @ViewChild('spreadTable') set grid(gridInstance: SpreadTable) {
     this.gridInstance = gridInstance;
@@ -58,7 +58,7 @@ export class AppComponent {
   // }
 
   getSpreadTable() {
-    console.log(this.gridInstance);
+    console.log(this.gridInstance as ISpreadTable);
     this.gridInstance.headerBgColor = this.randomColor().backgroundColor;
     this.gridInstance.headerColor = this.randomColor().color;
   }

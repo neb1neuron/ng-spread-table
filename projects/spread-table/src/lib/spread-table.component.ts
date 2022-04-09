@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
-import { SpreadTable } from './models/ispread-table';
+import { ISpreadTable } from './models/ispread-table';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
 
@@ -10,7 +10,7 @@ import { ContextMenuModel } from './models/context-menu.model';
   templateUrl: './spread-table.component.html',
   styleUrls: ['./spread-table.component.scss']
 })
-export class SpreadTableComponent extends SpreadTable implements OnChanges {
+export class SpreadTableComponent implements OnChanges, ISpreadTable {
   table = document.getElementById('spreadTable');
 
   @Input() columnWidth = 100;
@@ -174,8 +174,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     }
   }
 
-  constructor(private undoRedoService: UndoRedoService,) {
-    super();
+  constructor(private undoRedoService: UndoRedoService) {
   }
 
   public getSelectedCells(): Cell[] {
@@ -184,7 +183,7 @@ export class SpreadTableComponent extends SpreadTable implements OnChanges {
     return selectedCells;
   }
 
-  getData() {
+  public getData() {
     return this.data.map(row => {
       let dataRow = {};
       row.cells.map(cell => {
