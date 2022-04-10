@@ -6,10 +6,11 @@
      style="height: 700px;">
   <spread-table #spreadTable
                 [columns]="columns"
-                [itemSize]="30"
+                [itemSize]="36"
                 [indexWidth]="60"
                 [rawData]="data"
                 [extraContextMenuItems]="extraContextMenuItems"
+                [extraColumnMenuItems]="extraColumnMenuItems"
                 (cellValueChange)="onCellValueChange($event)"
                 (contextMenuEvent)="onContextMenuEvent($event)"
                 (columnMenuEvent)="onContextMenuEvent($event)">

@@ -5,6 +5,9 @@
 ![How it looks](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/spread-table.png)
 
 ## Demo
+*copy/paste won't work neither in stackblitz or codesandbox because these websites use an iframe to run the code and the clipboard api is not allowed in the iframe
+
+[stackblitz](https://stackblitz.com/edit/spread-table-angular11?file=src%2Fapp%2Fapp.component.ts)
 
 [codesandbox](https://codesandbox.io/s/goofy-dan-5703h)
 
@@ -15,8 +18,15 @@
 :white_check_mark: custom validators support  
 :white_check_mark: disabled columns  
 :white_check_mark: undo/redo on single or batch changes
+:white_check_mark: resizable columns
+:white_check_mark:extensible column/context menus with events
 
+## Next to come:
+Better documentation
+
+```
 Note: This plugin is till work in progress
+```
 
 ### Installation
 
@@ -40,7 +50,8 @@ import { SpreadTableModule } from "spread-table";
 @NgModule({
   imports: [
     // Other module imports
-    ...// spread-table modules
+    ...
+    // spread-table modules
     SpreadTableModule,
   ],
 })
@@ -62,23 +73,19 @@ import { Column } from "spread-table";
 export class AppComponent {
   title = "spread-table-test";
   columns: Column[] = [
-    new Column({
-      displayName: "Id",
-      name: "id",
-      width: "40px",
-      editable: false,
-    }),
-    new Column({ displayName: "Album Id", name: "albumId", width: "70px",validators: [RequiredValidator.required()] }),
-    new Column({ displayName: "Title", name: "title", width: "400px" }),
-    new Column({ displayName: "Url", name: "url", width: "300px" }),
-    new Column({
-      displayName: "Thumbnail Url",
-      name: "thumbnailUrl",
-      width: "300px",
-    }),
-  ];
+    new Column({ displayName: 'Id', name: 'id', editable: false, resizable: false }),
+    new Column({ displayName: 'Album Id', name: 'albumId', minWidth: 120 }),
+    new Column({ displayName: 'Title', name: 'title', minWidth: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
+    new Column({ displayName: 'Url', name: 'url', minWidth: 300 }),
+    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300 })];
 
   data: any;
+
+  gridInstance: ISpreadTable = new SpreadTable();
+
+  @ViewChild('spreadTable') set grid(gridInstance: SpreadTable) {
+    this.gridInstance = gridInstance;
+  }
 
   constructor(private httpClient: HttpClient) {
     this.getData();
@@ -95,8 +102,19 @@ export class AppComponent {
 ### Usage (app.component.html)
 
 ```html
-<div class="p-3 w-100" style="height: 800px;">
-  <spread-table [columns]="columns" [rawData]="data | async"></spread-table>
+<div class="p-3 w-100"
+     style="height: 700px;">
+  <spread-table #spreadTable
+                [columns]="columns"
+                [itemSize]="30"
+                [indexWidth]="60"
+                [rawData]="data"
+                [extraContextMenuItems]="extraContextMenuItems"
+                (cellValueChange)="onCellValueChange($event)"
+                (contextMenuEvent)="onContextMenuEvent($event)"
+                (columnMenuEvent)="onContextMenuEvent($event)">
+
+  </spread-table>
 </div>
 ```
 
@@ -139,6 +157,27 @@ columns: Column[] = [
 ![Validations](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/required-validation.png)
 
 ## Versions
+### v2.5.0
+- you can now have resizable columns. Changed width property to minWidth
+- added column menu: reset column width/all columns width
+- you can make an instance of the grid and use it to change properties or to change/get data from the grid
+```typescript
+  ...
+  gridInstance: ISpreadTable = new SpreadTable();
+
+  @ViewChild('spreadTable') set grid(gridInstance: SpreadTable) {
+    this.gridInstance = gridInstance;
+  }
+  ...
+```
+
+### v2.4.1
+- fix some bughs regarding copy and paste
+- added ability to extend context menu options. You can now catch events fired by the context menu(contextMenuEvent)
+- added cell value change events(cellValueChange)
+- added getData method to get data from the grid
+- added getSelectedCells method that returns the selected cells in the grid
+- change highlight(yellow). originalValue property on every cell to be able to mark the cell as a change if value !== originalValue.
 
 ### v2.0.0
 

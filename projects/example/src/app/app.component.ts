@@ -30,16 +30,30 @@ export class AppComponent {
       menuText: 'separator'
     }, {
       faIconName: 'fas fa-american-sign-language-interpreting',
-      menuText: 'Action2',
-      menuEvent: 'action1Event',
-      shortcut: 'Ctrl+?',
+      menuText: 'Test 1',
+      menuEvent: 'test1Event',
       disabled: false,
     },
     {
       faIconName: 'fas fa-archway',
-      menuText: 'Action 2',
-      menuEvent: 'action2Event',
-      shortcut: 'Ctrl+?',
+      menuText: 'Test 2',
+      menuEvent: 'test2Event',
+      disabled: true
+    },];
+
+  extraColumnMenuItems: ContextMenuModel[] =
+    [{
+      menuText: 'separator'
+    }, {
+      faIconName: 'fas fa-american-sign-language-interpreting',
+      menuText: 'Column Test 1',
+      menuEvent: 'columnTest1Event',
+      disabled: false,
+    },
+    {
+      faIconName: 'fas fa-archway',
+      menuText: 'Column Test 2',
+      menuEvent: 'columnTest2Event',
       disabled: true
     },];
 
@@ -48,7 +62,8 @@ export class AppComponent {
   }
 
   private async getData() {
-    const products: any = await lastValueFrom(this.httpClient.get('../assets/data.json'));
+    // const products: any = await lastValueFrom(this.httpClient.get('../assets/data.json'));
+    const products: any = await lastValueFrom(this.httpClient.get('https://jsonplaceholder.typicode.com/photos'));
 
     this.data = products;
   }

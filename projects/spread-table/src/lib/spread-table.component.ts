@@ -21,6 +21,7 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
   @Input() headerColor = '#efefef';
   @Input() columns: Column[] = [];
   @Input() extraContextMenuItems: ContextMenuModel[] = [];
+  @Input() extraColumnMenuItems: ContextMenuModel[] = [];
 
   @Output() cellValueChange = new EventEmitter<Change[]>();
   @Output() contextMenuEvent = new EventEmitter<ContextMenuModel>();
@@ -118,9 +119,9 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
       menuEvent: this.columnMenuActions.resetAllColumns
     }];
 
-    // if (this.extraContextMenuItems?.length) {
-    //   items.push(...this.extraContextMenuItems);
-    // }
+    if (this.extraColumnMenuItems?.length) {
+      items.push(...this.extraColumnMenuItems);
+    }
 
     this.columnMenuItems = items;
   }

@@ -64,7 +64,7 @@
             column.editable ? '' : 'not-editable']"
                *ngFor="let column of columns;let j = index">
             <div style="height: 100%;"
-                 class="error tooltip">
+                 class="error spread-table-tooltip">
               <div class="spread-cell-value hideextra"
                    *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div>
               <input *ngIf="isInEditMode(row.cells[j])"
@@ -73,7 +73,7 @@
                      (blur)="setCellValue(columns[j],row.cells[j])"
                      [formControlName]="columns[j].name" />
               <span *ngIf="row.cells[j].errors"
-                    class="validation-errors tooltiptext tooltip-bottom"
+                    class="validation-errors spread-table-tooltiptext spread-table-tooltip-bottom"
                     [innerHtml]="row.cells[j].errors"></span>
             </div>
           </div>

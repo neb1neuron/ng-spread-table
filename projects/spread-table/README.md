@@ -5,6 +5,9 @@
 ![How it looks](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/spread-table.png)
 
 ## Demo
+*copy/paste won't work neither in stackblitz or codesandbox because these websites use an iframe to run the code and the clipboard api is not allowed in the iframe
+
+[stackblitz](https://stackblitz.com/edit/spread-table-angular11?file=src%2Fapp%2Fapp.component.ts)
 
 [codesandbox](https://codesandbox.io/s/goofy-dan-5703h)
 
@@ -15,8 +18,15 @@
 :white_check_mark: custom validators support  
 :white_check_mark: disabled columns  
 :white_check_mark: undo/redo on single or batch changes
+:white_check_mark: resizable columns
+:white_check_mark:extensible column/context menus with events
 
+## Next to come:
+Better documentation
+
+```
 Note: This plugin is till work in progress
+```
 
 ### Installation
 
