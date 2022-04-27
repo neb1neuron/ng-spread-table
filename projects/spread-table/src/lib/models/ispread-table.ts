@@ -8,8 +8,8 @@ import { ContextMenuModel } from "./context-menu.model";
 })
 export class SpreadTable implements ISpreadTable {
   // inputs
-  columnWidth: number;
-  itemSize: number;
+  minColumnWidth: number;
+  rowHeight: number;
   indexWidth: number;
   rawData: any;
   headerBgColor: string;
@@ -35,8 +35,8 @@ export class SpreadTable implements ISpreadTable {
 
 export interface ISpreadTable {
   // inputs
-  columnWidth: number;
-  itemSize: number;
+  minColumnWidth: number;
+  rowHeight: number;
   indexWidth: number;
   rawData: any;
   headerBgColor: string;

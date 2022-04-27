@@ -18,7 +18,7 @@
       </div>
       <ng-container *ngFor="let column of columns">
         <div class="columnHeader"
-             [style.width]="(column.minWidth || 100) + 'px'">
+             [style.width]="(column.minWidth || minColumnWidth) + 'px'">
           <div class="column-name">{{column.displayName}}</div>
           <div class="column-menu"
                (mousedown)="openColumnMenu($event, column)"><i class="fas fa-bars"></i></div>
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <cdk-virtual-scroll-viewport [itemSize]="itemSize">
+  <cdk-virtual-scroll-viewport [itemSize]="rowHeight">
 
     <div #spreadTable
          tabindex="-1"
@@ -46,12 +46,12 @@
         <div class="spread-row"
              *cdkVirtualFor="let row of data;let i = index">
           <div class="spread-cell"
-               [style.height]="itemSize+'px'"
+               [style.height]="rowHeight+'px'"
                [style.width]="indexWidth + 'px'"
                [style.flex-grow]="0"><span>{{row.rowIndex}}</span></div>
           <div #spreadCell
                class="spread-cell"
-               [style.height]="itemSize+'px'"
+               [style.height]="rowHeight+'px'"
                [style.width]="column.minWidth + 'px'"
                (contextmenu)="openContextMenu($event,row.cells[j]);"
                (dblclick)="column.editable ? doubleClick(row.cells[j]) : ''"

@@ -13,8 +13,8 @@ import { ContextMenuModel } from './models/context-menu.model';
 export class SpreadTableComponent implements OnChanges, ISpreadTable {
   table = document.getElementById('spreadTable');
 
-  @Input() columnWidth = 100;
-  @Input() itemSize = 24;
+  @Input() minColumnWidth = 100;
+  @Input() rowHeight = 24;
   @Input() indexWidth = 60;
   @Input() rawData: any = null;
   @Input() headerBgColor = '#634be3';
@@ -209,14 +209,15 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
       this.data = [...data];
 
       setTimeout(() => {
-        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.minWidth || 100).reduce((a, b) => a + b, 0) + 10) + 'px';
+        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.minWidth || this.minColumnWidth).reduce((a, b) => a + b, 0) + 10) + 'px';
         this.setupTableEvents();
       }, 0);
     }
 
     if (this.columns?.length > 0) {
       this.columns.map(c => {
-        this.originalColumnsWidth[c.name] = c.minWidth || 100;
+        c.minWidth = c.minWidth || this.minColumnWidth;
+        this.originalColumnsWidth[c.name] = c.minWidth;
       });
     }
   }
@@ -247,12 +248,12 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
 
   setColumnsWidth = () => {
     const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
-    const columnsWidthSum = this.columns.map(c => { return c.minWidth || 100 }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
+    const columnsWidthSum = this.columns.map(c => { return c.minWidth || this.minColumnWidth }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
     document.querySelector('cdk-virtual-scroll-viewport')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
     document.getElementById('spread-table-header')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
     if (headerWidth > columnsWidthSum) {
       this.columns.map(c => {
-        const percentage = (c.minWidth || 100) * 100 / (columnsWidthSum - this.indexWidth - 10);
+        const percentage = (c.minWidth || this.minColumnWidth) * 100 / (columnsWidthSum - this.indexWidth - 10);
         c.minWidth = c.minWidth + ((headerWidth - columnsWidthSum) * percentage / 100);
       });
     }
@@ -867,9 +868,9 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
   resize = (event) => {
     if (this.columnBeingResized) {
       const { left } = this.htmlColumnBeingResized?.getBoundingClientRect() || 0;
-      this.columnBeingResized.minWidth = Math.max(event.pageX - left, 100);
+      this.columnBeingResized.minWidth = Math.max(event.pageX - left, this.minColumnWidth);
       const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
-      const columnsWidthSum = this.columns.map(c => { return c.minWidth || 100 }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
+      const columnsWidthSum = this.columns.map(c => { return c.minWidth || this.minColumnWidth }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
       document.querySelector('cdk-virtual-scroll-viewport')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
       document.getElementById('spread-table-header')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
     }

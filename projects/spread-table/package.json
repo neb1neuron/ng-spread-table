@@ -2,7 +2,15 @@
   "name": "spread-table",
   "version": "2.7.1",
   "keywords": [
+    "spreadtable",
+    "spread-table",
     "angular",
+    "angular2",
+    "ng",
+    "datagrid",
+    "data-grid",
+    "datatable",
+    "data-table",
     "table",
     "spreadsheet"
   ],

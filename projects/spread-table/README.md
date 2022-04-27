@@ -17,9 +17,9 @@
 :white_check_mark: copy/paste/cut from and into excel  
 :white_check_mark: custom validators support  
 :white_check_mark: disabled columns  
-:white_check_mark: undo/redo on single or batch changes
-:white_check_mark: resizable columns
-:white_check_mark:extensible column/context menus with events
+:white_check_mark: undo/redo on single or batch changes  
+:white_check_mark: resizable columns  
+:white_check_mark: extensible column/context menus with events
 
 ## Next to come:
 Better documentation
@@ -105,14 +105,15 @@ export class AppComponent {
 <div class="p-3 w-100"
      style="height: 700px;">
   <spread-table #spreadTable
-                [columns]="columns"
-                [itemSize]="30"
-                [indexWidth]="60"
-                [rawData]="data"
-                [extraContextMenuItems]="extraContextMenuItems"
-                (cellValueChange)="onCellValueChange($event)"
-                (contextMenuEvent)="onContextMenuEvent($event)"
-                (columnMenuEvent)="onContextMenuEvent($event)">
+    [columns]="columns"
+    [rowHeight]="30"
+    [indexWidth]="60"
+    [rawData]="data"
+    [extraContextMenuItems]="extraContextMenuItems"
+    [extraColumnMenuItems]="extraColumnMenuItems"
+    (cellValueChange)="onCellValueChange($event)"
+    (contextMenuEvent)="onContextMenuEvent($event)"
+    (columnMenuEvent)="onContextMenuEvent($event)">
 
   </spread-table>
 </div>
@@ -156,8 +157,71 @@ columns: Column[] = [
 ### Result 
 ![Validations](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/required-validation.png)
 
+## API
+### Inputs
+| Input                   | Type               | Default                              | Required | Description                                                                                                                                                                    |
+|-------------------------|--------------------|--------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [rawData]               | any                |                                      | yes      | json data for the table                                                                                                                                                        |
+| [columns]               | Column[]           |                                      | yes      | column definition for the table. The columns should match<br>the data structure in rawData and also configure the properties <br>of the columns in the grid. See Column class. |
+| [minColumnWidth]           | number             | 100                                  | no       | default column min-width in px                                                                                                                                                 |
+| [rowHeight]              | number             | 24                                   | no       | default row height in px                                                                                                                                                       |
+| [indexWidth]            | number             | 60                                   | no       | default Index column width in px                                                                                                                                               |
+| [headerBgColor]         | string             | '#634be3'                            | no       | header background color                                                                                                                                                        |
+| [headerColor]           | string             | '#efefef'                            | no       | header text color                                                                                                                                                              |
+| [extraContextMenuItems] | ContextMenuModel[] | copy,cut,paste,undo,redo             | no       | you can define extra context menu items for the grid.<br>See ContextMenuModel class                                                                                            |
+| [columnMenuItems]       | ContextMenuModel[] | reset column size, reset all columns | no       | you can define extra column menu items for the grid.<br>See ContextMenuModel class          
+### Outputs
+| Output             | Type             | Description                                                                     |
+|--------------------|------------------|---------------------------------------------------------------------------------|
+| (cellValueChange)  | Change[]         | event fired when a cell value is edited.<br>See Change class.                   |
+| (contextMenuEvent) | ContextMenuModel | event fired when a context menu item is clicked.<br>See ContextMenuModel class. |
+| (columnMenuEvent)  | ContextMenuModel | event fired when a column menu item is clicked.<br>See ContextMenuModelClass.   |
+
+### Classes
+```typescript
+export class Column {
+  public name = '';
+  public displayName?= 'N/A';
+  public minWidth?:number;
+  public editable?= true;
+  public resizable?= true;
+  public validators?: any[] | undefined;
+
+  constructor(obj?: Column) {
+    Object.assign(this, obj);
+    if (!obj?.displayName) {
+      this.displayName = obj?.name;
+    }
+  }
+}
+```
+
+```typescript
+export class ContextMenuModel {
+  faIconName?: string = '';
+  menuText?: string = '';
+  menuEvent?: string = '';
+  shortcut?: string = '';
+  disabled?: boolean = false;
+}
+```
+
+```typescript
+export class Change {
+  beforeValue: any;
+  afterValue: any;
+  coordinates = { rowIndex: 0, columnIndex: 0 }
+  constructor(pagObj?: Change) {
+    Object.assign(this, pagObj);
+  }
+}
+```
+
+## Be kind
+[![Donate](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/buy-me-a-beer.svg)](https://www.paypal.com/paypalme/CFeder/5)
+
 ## Versions
-### v2.5.0
+### v2.7.1
 - you can now have resizable columns. Changed width property to minWidth
 - added column menu: reset column width/all columns width
 - you can make an instance of the grid and use it to change properties or to change/get data from the grid

@@ -12,7 +12,7 @@ import { RequiredValidator } from './custom-validators/required-validator';
 export class AppComponent {
   columns: Column[] = [
     new Column({ displayName: 'Id', name: 'id', editable: false, resizable: false }),
-    new Column({ displayName: 'Album Id', name: 'albumId', minWidth: 120 }),
+    new Column({ displayName: 'Album Id', name: 'albumId' }),
     new Column({ displayName: 'Title', name: 'title', minWidth: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
     new Column({ displayName: 'Url', name: 'url', minWidth: 300 }),
     new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300 })];
