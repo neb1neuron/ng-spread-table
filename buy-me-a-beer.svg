@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="80"
-   height="24"
-   viewBox="0 0 21.166667 6.3500002"
+   width="104"
+   height="30"
+   viewBox="0 0 27.516667 7.9375003"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
-   sodipodi:docname="buy me a beet.svg"
+   sodipodi:docname="buy-me-a-beer.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,9 +24,9 @@
      inkscape:document-units="px"
      showgrid="false"
      units="px"
-     inkscape:zoom="8.7988368"
-     inkscape:cx="43.926261"
-     inkscape:cy="50.631693"
+     inkscape:zoom="4.3994184"
+     inkscape:cx="48.074536"
+     inkscape:cy="18.979782"
      inkscape:window-width="1918"
      inkscape:window-height="2061"
      inkscape:window-x="-8"
@@ -40,115 +40,229 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g25603"
-       transform="translate(-16.25017,-52.032481)">
+       id="g25667"
+       transform="matrix(1.2735317,0,0,1.2735317,-20.414984,-66.339919)">
       <path
-         id="rect846"
-         style="fill:#000000;stroke-width:0.554604;stroke-linecap:round"
-         d="m 70.287109,198.6582 c -4.390189,0 -7.925781,3.5356 -7.925781,7.92578 v 4.1504 c 0,4.39018 3.535592,7.92382 7.925781,7.92382 h 42.113281 v -20 z"
-         transform="scale(0.26458333)" />
-      <path
-         id="rect12638"
+         id="path25629"
          style="fill:#ffc524;fill-opacity:1;stroke-width:0.554604;stroke-linecap:round"
-         d="m 111.30281,198.6582 v 20 h 21.24797 c 4.39019,0 7.92383,-3.53364 7.92383,-7.92382 v -4.1504 c 0,-4.39018 -3.53364,-7.92578 -7.92383,-7.92578 z"
-         transform="scale(0.26458333)"
-         sodipodi:nodetypes="ccssssc" />
+         d="m 8.8691406,42.005859 c -4.3901888,0 -7.92578122,3.535602 -7.92578122,7.925782 v 4.15039 c 0,4.39018 3.53559242,7.923828 7.92578122,7.923828 h 41.0156254 1.097656 20.15039 c 4.39019,0 7.923829,-3.533648 7.923829,-7.923828 v -4.15039 c 0,-4.39018 -3.533639,-7.925782 -7.923829,-7.925782 h -20.15039 -1.097656 z"
+         transform="matrix(0.26458334,0,0,0.26458334,16.25017,41.447748)" />
       <g
-         id="g13532"
-         transform="translate(0.06636041)">
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.67763px;line-height:1.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0669408"
-           x="17.865349"
-           y="56.068214"
-           id="text2690"><tspan
-             sodipodi:role="line"
-             id="tspan2688"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';fill:#ffffff;fill-opacity:1;stroke-width:0.0669408"
-             x="17.865349"
-             y="56.068214">Buy me a</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.67763px;line-height:1.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0669408"
-           x="29.900972"
-           y="56.068214"
-           id="text6384"><tspan
-             sodipodi:role="line"
-             id="tspan6382"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.0669408"
-             x="29.900972"
-             y="56.068214">beer</tspan></text>
-      </g>
-      <g
-         id="g25009"
-         style="fill:#ffffff;fill-opacity:0.532066">
+         id="g25665"
+         style="fill:#ffffff;fill-opacity:0.532066"
+         transform="translate(-12.289949)">
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
-           id="path16148"
+           id="circle25643"
            cx="35.22197"
            cy="53.48679"
            r="0.34020621" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1.90598;stroke-linecap:round"
-           id="circle16670"
+           id="circle25645"
            cx="31.756369"
            cy="53.644657"
            r="0.64842641" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
-           id="circle16672"
+           id="circle25647"
            cx="33.297474"
            cy="53.156017"
            r="0.34020621" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
-           id="circle16674"
+           id="circle25649"
            cx="33.838737"
            cy="57.03508"
            r="0.34020621" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1.57452;stroke-linecap:round"
-           id="circle16676"
+           id="circle25651"
            cx="31.147448"
            cy="56.809551"
            r="0.53566289" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
-           id="circle16678"
+           id="circle25653"
            cx="35.936138"
            cy="56.396084"
            r="0.18233733" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
-           id="circle16680"
+           id="circle25655"
            cx="36.191734"
            cy="55.704468"
            r="0.18233733" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
-           id="circle16682"
+           id="circle25657"
            cx="36.657822"
            cy="55.118099"
            r="0.18233733" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
-           id="circle16684"
+           id="circle25659"
            cx="36.432297"
            cy="53.930325"
            r="0.18233733" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
-           id="circle16686"
+           id="circle25661"
            cx="30.072435"
            cy="53.479271"
            r="0.18233733" />
         <circle
            style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
-           id="circle16688"
+           id="circle25663"
+           cx="29.937119"
+           cy="57.012527"
+           r="0.18233733" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37738"
+           cx="41.749676"
+           cy="-57.001987"
+           r="0.34020621"
+           transform="scale(1,-1)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1.90598;stroke-linecap:round"
+           id="circle37740"
+           cx="38.284073"
+           cy="-56.84412"
+           r="0.64842641"
+           transform="scale(1,-1)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37742"
+           cx="39.82518"
+           cy="-57.33276"
+           r="0.34020621"
+           transform="scale(1,-1)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37744"
+           cx="40.366444"
+           cy="-53.453697"
+           r="0.34020621"
+           transform="scale(1,-1)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37746"
+           cx="36.60014"
+           cy="-57.009506"
+           r="0.18233733"
+           transform="scale(1,-1)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37748"
+           cx="69.228889"
+           cy="4.4749384"
+           r="0.34020621"
+           transform="rotate(50.288932)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1.90598;stroke-linecap:round"
+           id="circle37750"
+           cx="65.76329"
+           cy="4.6328058"
+           r="0.64842641"
+           transform="rotate(50.288932)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37752"
+           cx="67.304398"
+           cy="4.144166"
+           r="0.34020621"
+           transform="rotate(50.288932)" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37754"
+           cx="67.845657"
+           cy="8.0232286"
+           r="0.34020621"
+           transform="rotate(50.288932)" />
+      </g>
+      <g
+         id="g37736"
+         style="fill:#ffffff;fill-opacity:0.532066"
+         transform="matrix(-1,0,0,1,66.59494,0)">
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37714"
+           cx="35.22197"
+           cy="53.48679"
+           r="0.34020621" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1.90598;stroke-linecap:round"
+           id="circle37716"
+           cx="31.756369"
+           cy="53.644657"
+           r="0.64842641" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37718"
+           cx="33.297474"
+           cy="53.156017"
+           r="0.34020621" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1;stroke-linecap:round"
+           id="circle37720"
+           cx="33.838737"
+           cy="57.03508"
+           r="0.34020621" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:1.57452;stroke-linecap:round"
+           id="circle37722"
+           cx="31.147448"
+           cy="56.809551"
+           r="0.53566289" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37724"
+           cx="35.936138"
+           cy="56.396084"
+           r="0.18233733" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37726"
+           cx="36.191734"
+           cy="55.704468"
+           r="0.18233733" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37728"
+           cx="36.657822"
+           cy="55.118099"
+           r="0.18233733" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37730"
+           cx="36.432297"
+           cy="53.930325"
+           r="0.18233733" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37732"
+           cx="30.072435"
+           cy="53.479271"
+           r="0.18233733" />
+        <circle
+           style="fill:#ffffff;fill-opacity:0.532066;stroke-width:0.535961;stroke-linecap:round"
+           id="circle37734"
            cx="29.937119"
            cy="57.012527"
            r="0.18233733" />
       </g>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.67763px;line-height:1.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0669408"
+         x="17.453955"
+         y="56.027393"
+         id="text25635"><tspan
+           sodipodi:role="line"
+           id="tspan25633"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#000000;fill-opacity:1;stroke-width:0.0669408"
+           x="17.453955"
+           y="56.027393">Buy me a beer</tspan></text>
     </g>
   </g>
 </svg>
