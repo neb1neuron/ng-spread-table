@@ -18,6 +18,8 @@ export class AppComponent {
     new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300 })];
 
   data: any;
+  event!: string;
+  result: any;
 
   gridInstance: ISpreadTable = new SpreadTable();
 
@@ -76,27 +78,36 @@ export class AppComponent {
     console.log(this.gridInstance as ISpreadTable);
     this.gridInstance.headerBgColor = this.randomColor().backgroundColor;
     this.gridInstance.headerColor = this.randomColor().color;
+    this.result = Object.keys(this.gridInstance).join('<br>');
+    this.event = 'Grid properties';
   }
 
   getSelectedCells() {
     console.log(this.gridInstance.getSelectedCells());
+    this.result = JSON.stringify(this.gridInstance.getSelectedCells(), null, 2);
+    this.event = 'Selected Cells';
   }
 
   getGridData() {
     console.log(this.gridInstance.getData());
+    this.result = JSON.stringify(this.gridInstance.getData(), null, 2);
+    this.event = 'Grid instance';
   }
-
 
   onCellValueChange(event: Change[]) {
     console.log('changes:', event);
+    this.result = JSON.stringify(event, null, 2);
+    this.event = 'Cell value change';
   }
 
   onContextMenuEvent(event: ContextMenuModel) {
     console.log('contextMenuEvent', event);
+    this.result = JSON.stringify(event, null, 2);
+    this.event = 'Menu event';
   }
 
   private randomColor = () => {
-    let color = Math.floor(Math.random() * 16777215).toString(16)
+    let color = Math.floor(Math.random() * 16777215).toString(16);
 
     /* sometimes the returned value does not have
      * the 6 digits needed, so we do it again until
@@ -104,13 +115,13 @@ export class AppComponent {
      */
 
     while (color.length < 6) {
-      color = Math.floor(Math.random() * 16777215).toString(16)
+      color = Math.floor(Math.random() * 16777215).toString(16);
     }
 
-    let red = parseInt(color.substring(0, 2), 16)
-    let green = parseInt(color.substring(2, 4), 16)
-    let blue = parseInt(color.substring(4, 6), 16)
-    let brightness = red * 0.299 + green * 0.587 + blue * 0.114
+    let red = parseInt(color.substring(0, 2), 16);
+    let green = parseInt(color.substring(2, 4), 16);
+    let blue = parseInt(color.substring(4, 6), 16);
+    let brightness = red * 0.299 + green * 0.587 + blue * 0.114;
 
     /* if (red*0.299 + green*0.587 + blue*0.114) > 180
      * use #000000 else use #ffffff
@@ -119,12 +130,13 @@ export class AppComponent {
     if (brightness > 180) {
       return {
         backgroundColor: '#' + color,
-        color: '#000000'
-      }
-    }
-    else return {
-      backgroundColor: '#' + color,
-      color: '#ffffff'
-    }
-  }
+        color: '#000000',
+      };
+    } else
+      return {
+        backgroundColor: '#' + color,
+        color: '#ffffff',
+      };
+  };
 }
+

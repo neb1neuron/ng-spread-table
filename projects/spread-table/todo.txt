@@ -15,3 +15,9 @@ To do list:
 - view to interface grid: methods and public memberss
 - context menu extensibility
 - columns properties
+
+
+
+// local package
+"spread-table": "file:test-packages/spread-table",
+"spread-table": "2.7.2",
