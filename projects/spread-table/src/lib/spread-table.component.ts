@@ -244,6 +244,18 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
     this.setColumnsWidth();
 
     window.addEventListener('resize', this.setColumnsWidth);
+
+    const target = document.getElementById('spreadTable');
+
+    target.addEventListener('paste', (event) => {
+      let paste = (event['clipboardData'] || window['clipboardData']).getData('text');
+
+      this.handlePaste(paste);
+
+      if (!this.isEditMode) {
+        event.preventDefault();
+      }
+    });
   }
 
   setColumnsWidth = () => {
@@ -407,26 +419,28 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
           this.doubleClick(selectedCell);
           break;
         default:
-      }
+          if (event.ctrlKey) {
 
-      if (event.ctrlKey) {
-
-        switch (event.key) {
-          case 'v':
-            this.handlePaste();
-            break;
-          case 'c':
-            this.handleCopy();
-            break;
-          case 'z':
-            this.undo();
-            break;
-          case 'y':
-            this.redo();
-            break;
-          default:
-            break;
-        }
+            switch (event.key) {
+              case 'v':
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                  this.handlePaste();
+                }
+                break;
+              case 'c':
+                this.handleCopy();
+                break;
+              case 'z':
+                this.undo();
+                break;
+              case 'y':
+                this.redo();
+                break;
+              default:
+                break;
+            }
+          }
+          break;
       }
     } else {
 
@@ -548,27 +562,45 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
         copyString = copyString.slice(0, -1);
       }
       if (valuesRow !== data.get([...data][data.size - 1][0])) {
-        copyString += '\r\n';
+        copyString += '\n';
       }
     });
 
-    await navigator.clipboard.writeText(copyString);
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(copyString);
+    }
   }
 
-  handlePaste = async () => {
+  handlePaste = async (pasteText = '') => {
     if (this.isEditMode) return;
     let pastedData;
 
-    pastedData = await navigator.clipboard.readText();
+    //setTimeout(async () => {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+
+      pastedData = await navigator.clipboard.readText();
+
+    } else {
+      console.log(pasteText);
+      pastedData = pasteText;
+    }
+
     if (!pastedData && pastedData !== '') return;
 
-    const dataRows = pastedData.split('\r\n');
+    let dataRows = pastedData.split('\n');
+    // if (dataRows.length === 1) {
+    //   dataRows = pastedData.split('\n');
+    // }
 
     let copyData: any[] = [];
 
     dataRows.forEach(dataRow => {
       if (dataRow || dataRow === '') {
-        copyData.push(dataRow.split('\t'));
+        let columns = dataRow.split('\t');
+        // if (columns.length === 1) {
+        //   columns = dataRow.split('    ');
+        // }
+        copyData.push(columns);
       }
     });
 
@@ -624,6 +656,7 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
       this.undoRedoService.setChange(changes);
       this.cellValueChange.emit(changes);
     }
+    //}, 100);
   }
 
   setCellValue(column: Column, cell: Cell) {
@@ -786,8 +819,10 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
         break;
       }
       case this.contextMenuActions.paste: {
-        this.handlePaste();
-        this.table?.focus();
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          this.handlePaste();
+          this.table?.focus();
+        }
         break
       }
       case this.contextMenuActions.undo: {
