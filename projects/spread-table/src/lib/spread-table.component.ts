@@ -575,7 +575,6 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
     if (this.isEditMode) return;
     let pastedData;
 
-    //setTimeout(async () => {
     if (navigator.clipboard && navigator.clipboard.readText) {
 
       pastedData = await navigator.clipboard.readText();
@@ -587,18 +586,12 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
     if (!pastedData && pastedData !== '') return;
 
     let dataRows = pastedData.split('\n');
-    // if (dataRows.length === 1) {
-    //   dataRows = pastedData.split('\n');
-    // }
 
     let copyData: any[] = [];
 
     dataRows.forEach(dataRow => {
       if (dataRow || dataRow === '') {
         let columns = dataRow.split('\t');
-        // if (columns.length === 1) {
-        //   columns = dataRow.split('    ');
-        // }
         copyData.push(columns);
       }
     });
@@ -655,7 +648,6 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
       this.undoRedoService.setChange(changes);
       this.cellValueChange.emit(changes);
     }
-    //}, 100);
   }
 
   setCellValue(column: Column, cell: Cell) {
