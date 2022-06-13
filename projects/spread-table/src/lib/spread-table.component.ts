@@ -581,7 +581,6 @@ export class SpreadTableComponent implements OnChanges, ISpreadTable {
       pastedData = await navigator.clipboard.readText();
 
     } else {
-      console.log(pasteText);
       pastedData = pasteText;
     }
 
