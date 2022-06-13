@@ -213,6 +213,7 @@ export class Change {
 ```
 
 ## Be kind
+[![Donate](https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/buy-me-a-beer.svg)](https://www.paypal.com/paypalme/CFeder/5)
 
 
 <a style="padding-right:200px;padding-bottom:35px;background:url(https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/buy-me-a-beer.svg);background-repeat: no-repeat;background-size: cover;" href="https://www.paypal.com/paypalme/CFeder/5"></a>
@@ -228,7 +229,7 @@ Note: This plugin is till work in progress
 ```
 
 ## Versions
-### v2.7.3
+### v2.7.4
 - fixed clipboard copy/paste for browsers without clipboard API.Copy/Paste now works also in Firefox.
 ### v2.7.1
 - you can now have resizable columns. Changed width property to minWidth
