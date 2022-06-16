@@ -6,7 +6,7 @@ import { ContextMenuModel } from "./context-menu.model";
 @Injectable({
   providedIn: 'root'
 })
-export class SpreadTable implements ISpreadTable {
+export class SpreadTable {
   // inputs
   minColumnWidth: number;
   rowHeight: number;
@@ -31,28 +31,4 @@ export class SpreadTable implements ISpreadTable {
   }
 
   resetColumnWidths() { }
-}
-
-export interface ISpreadTable {
-  // inputs
-  minColumnWidth: number;
-  rowHeight: number;
-  indexWidth: number;
-  rawData: any;
-  headerBgColor: string;
-  headerColor: string;
-  columns: Column[];
-
-  columnMenuItems: ContextMenuModel[];
-  contextMenuItems: ContextMenuModel[];
-  extraContextMenuItems: ContextMenuModel[];
-
-  //outputs
-  cellValueChange: EventEmitter<Change[]>;
-  contextMenuEvent: EventEmitter<ContextMenuModel>;
-
-  // methods
-  getSelectedCells(): Cell[];
-  resetColumnWidths();
-  getData();
 }

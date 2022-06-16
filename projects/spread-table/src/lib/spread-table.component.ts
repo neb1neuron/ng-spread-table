@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
-import { ISpreadTable } from './models/ispread-table';
+import { SpreadTable } from './models/ispread-table';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
 
@@ -10,7 +10,7 @@ import { ContextMenuModel } from './models/context-menu.model';
   templateUrl: './spread-table.component.html',
   styleUrls: ['./spread-table.component.scss']
 })
-export class SpreadTableComponent implements OnChanges, ISpreadTable {
+export class SpreadTableComponent implements OnChanges, SpreadTable {
   table = document.getElementById('spreadTable');
 
   @Input() minColumnWidth = 100;

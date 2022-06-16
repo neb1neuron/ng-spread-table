@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Column, Change, ContextMenuModel, SpreadTable, ISpreadTable } from 'spread-table';
+import { Column, Change, ContextMenuModel, SpreadTableComponent, UndoRedoService } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
 
 @Component({
@@ -21,9 +21,9 @@ export class AppComponent {
   event!: string;
   result: any;
 
-  gridInstance: ISpreadTable = new SpreadTable();
+  gridInstance: SpreadTableComponent = new SpreadTableComponent(new UndoRedoService());
 
-  @ViewChild('spreadTable') set grid(gridInstance: SpreadTable) {
+  @ViewChild('spreadTable') set grid(gridInstance: SpreadTableComponent) {
     this.gridInstance = gridInstance;
   }
 
@@ -75,7 +75,7 @@ export class AppComponent {
   // }
 
   getSpreadTable() {
-    console.log(this.gridInstance as ISpreadTable);
+    console.log(this.gridInstance as SpreadTable);
     this.gridInstance.headerBgColor = this.randomColor().backgroundColor;
     this.gridInstance.headerColor = this.randomColor().color;
     this.result = Object.keys(this.gridInstance).join('<br>');

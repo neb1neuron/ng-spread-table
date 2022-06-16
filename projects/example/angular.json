@@ -142,5 +142,8 @@
       }
     }
   },
-  "defaultProject": "spread-table-test"
+  "defaultProject": "spread-table-test",
+  "cli": {
+    "analytics": "58c76e6f-4e22-4579-a3e1-52d5f844b02a"
+  }
 }
