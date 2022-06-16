@@ -15,13 +15,13 @@
     "spreadsheet"
   ],
   "peerDependencies": {
-    "@angular/common": "~13.3.11",
-    "@angular/core": "~13.3.11",
+    "@angular/common": "~14.0.2",
+    "@angular/core": "~14.0.2",
     "@angular/cdk": "^13.3.9",
     "rxjs": "~7.4.0",
-    "@angular/compiler-cli": "~13.3.11",
-    "@angular/forms": "~13.3.11",
-    "@angular/localize": "~13.3.11",
+    "@angular/compiler-cli": "~14.0.2",
+    "@angular/forms": "~14.0.2",
+    "@angular/localize": "~14.0.2",
     "zone.js": "~0.11.4"
   },
   "author": "Feder Catalin <feder.catalin@gmail.com> (https://www.d3cod3r.com/)",
