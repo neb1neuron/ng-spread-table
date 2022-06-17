@@ -9,9 +9,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SpreadTableModule } from 'spread-table';
+
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { CustomModalComponent } from './custom-modal/custom-modal.component';
+import { MatInputModule } from '@angular/material/input';
+
 @NgModule({
   declarations: [
     AppComponent,
+    CustomModalComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +29,10 @@ import { SpreadTableModule } from 'spread-table';
     SpreadTableModule,
     ReactiveFormsModule,
     ScrollingModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

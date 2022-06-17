@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Column, Change, ContextMenuModel, SpreadTableComponent, UndoRedoService } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomModalComponent } from './custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -47,19 +49,24 @@ export class AppComponent {
     [{
       menuText: 'separator'
     }, {
-      faIconName: 'fas fa-american-sign-language-interpreting',
-      menuText: 'Column Test 1',
-      menuEvent: 'columnTest1Event',
+      faIconName: 'fas fa-edit',
+      menuText: 'Rename column',
+      menuEvent: 'renameColumnEvent',
+      disabled: false,
+    }, {
+      faIconName: 'fas fa-plus-square',
+      menuText: 'Add column',
+      menuEvent: 'addColumnEvent',
       disabled: false,
     },
     {
-      faIconName: 'fas fa-archway',
-      menuText: 'Column Test 2',
-      menuEvent: 'columnTest2Event',
-      disabled: true
+      faIconName: 'fas fa-trash',
+      menuText: 'Remove column',
+      menuEvent: 'removeColumnEvent',
+      disabled: false
     },];
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, public dialog: MatDialog) {
     this.getData();
   }
 
@@ -75,7 +82,7 @@ export class AppComponent {
   // }
 
   getSpreadTable() {
-    console.log(this.gridInstance as SpreadTable);
+    console.log(this.gridInstance as SpreadTableComponent);
     this.gridInstance.headerBgColor = this.randomColor().backgroundColor;
     this.gridInstance.headerColor = this.randomColor().color;
     this.result = Object.keys(this.gridInstance).join('<br>');
@@ -104,6 +111,57 @@ export class AppComponent {
     console.log('contextMenuEvent', event);
     this.result = JSON.stringify(event, null, 2);
     this.event = 'Menu event';
+  }
+
+  async onColumnMenuEvent(event: ContextMenuModel) {
+    console.log('contextMenuEvent', event);
+    this.result = JSON.stringify(event, null, 2);
+    this.event = 'Menu event';
+    if (event.menuEvent === 'addColumnEvent') {
+      const result = await this.openDialog(`Add new column`, 'Column name', 'Add', 'Cancel');
+
+      this.data.forEach((element: any) => {
+        element[result] = '';
+      });
+
+      this.data = [...this.data];
+      this.columns.splice(this.columns.indexOf(event.column!) + 1, 0, new Column({ name: result, displayName: result, editable: true, resizable: true, minWidth: 200, }));
+      this.columns = [...this.columns];
+    }
+
+    if (event.menuEvent === 'removeColumnEvent') {
+      this.data = [...this.data];
+      this.columns.splice(this.columns.indexOf(event.column!), 1);
+      this.columns = [...this.columns];
+    }
+
+    if (event.menuEvent === 'renameColumnEvent') {
+      const result = await this.openDialog(`Rename - ${event.column!.displayName}`, 'Column name', 'Rename', 'Cancel');
+
+      this.data.forEach((element: any) => {
+        element[result] = element[event.column!.name];
+        delete element[event.column!.name];
+      });
+
+      this.data = [...this.data];
+      const columnIndex = this.columns.indexOf(event.column!);
+      this.columns[columnIndex].displayName = result;
+      this.columns[columnIndex].name = result;
+      this.columns = [...this.columns];
+    }
+  }
+
+  async openDialog(headerText: string, bodyText: string, okButtonText: string, cancelButtonText: string) {
+    const dialogRef = this.dialog.open(CustomModalComponent);
+
+    dialogRef.componentInstance.headerText = headerText;
+    dialogRef.componentInstance.bodyText = bodyText;
+    dialogRef.componentInstance.okButtonText = okButtonText;
+    dialogRef.componentInstance.cancelButtonText = cancelButtonText;
+
+    const result = await firstValueFrom(dialogRef.afterClosed());
+
+    return result;
   }
 
   private randomColor = () => {

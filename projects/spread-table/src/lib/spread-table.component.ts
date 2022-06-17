@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
-import { SpreadTable } from './models/ispread-table';
+import { SpreadTable } from './models/spread-table.models';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
 
@@ -40,7 +40,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   endCellIndex = 0;
   selectedCellCoordinates?: { rowIndex: number, columnIndex: number } = undefined;
   isEditMode = false;
-  columnBeingResized: Column = null;
+  columnBeingResized: Column | null = null;
   htmlColumnBeingResized = null;
   originalColumnsWidth = {};
 
@@ -65,62 +65,75 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   contextMenuItems: ContextMenuModel[] = [];
   columnMenuItems: ContextMenuModel[] = [];
 
-  createContextMenuItems() {
+  createContextMenuItems(column: Column) {
     let items: ContextMenuModel[] = [{
       faIconName: 'far fa-copy',
       menuText: 'Copy',
       disabled: true,
       menuEvent: this.contextMenuActions.copy,
-      shortcut: 'Ctrl+C'
+      shortcut: 'Ctrl+C',
+      column: column
     },
     {
       faIconName: 'fas fa-cut',
       menuText: 'Cut',
       menuEvent: this.contextMenuActions.cut,
       shortcut: 'Ctrl+X',
-      disabled: !this.editableContextMenu
+      disabled: !this.editableContextMenu,
+      column: column
     },
     {
       faIconName: 'far fa-clipboard',
       menuText: 'Paste',
       menuEvent: this.contextMenuActions.paste,
       shortcut: 'Ctrl+V',
-      disabled: !this.editableContextMenu
+      disabled: !this.editableContextMenu,
+      column: column
     }, {
       faIconName: 'fas fa-undo',
       menuText: 'Undo',
       menuEvent: this.contextMenuActions.undo,
       shortcut: 'Ctrl+Z',
-      disabled: !this.editableContextMenu
+      disabled: !this.editableContextMenu,
+      column: column
     }, {
       faIconName: 'fas fa-redo',
       menuText: 'Redo',
       menuEvent: this.contextMenuActions.redo,
       shortcut: 'Ctrl+Y',
-      disabled: !this.editableContextMenu
+      disabled: !this.editableContextMenu,
+      column: column
     }];
 
     if (this.extraContextMenuItems?.length) {
-      items.push(...this.extraContextMenuItems);
+      items.push(...this.extraContextMenuItems.map(extraContextMenuItem => {
+        extraContextMenuItem.column = column;
+        return extraContextMenuItem;
+      }));
     }
 
     this.contextMenuItems = items;
   }
 
-  createColumnMenuItems() {
+  createColumnMenuItems(column: Column) {
     let items: ContextMenuModel[] = [{
       faIconName: 'fas fa-list',
       menuText: 'Reset Column',
-      menuEvent: this.columnMenuActions.resetColumn
+      menuEvent: this.columnMenuActions.resetColumn,
+      column: column
     },
     {
       faIconName: 'fas fa-list',
       menuText: 'Reset All Columns',
-      menuEvent: this.columnMenuActions.resetAllColumns
+      menuEvent: this.columnMenuActions.resetAllColumns,
+      column: column
     }];
 
     if (this.extraColumnMenuItems?.length) {
-      items.push(...this.extraColumnMenuItems);
+      items.push(...this.extraColumnMenuItems.map(extraColumnMenuItem => {
+        extraColumnMenuItem.column = column;
+        return extraColumnMenuItem;
+      }));
     }
 
     this.columnMenuItems = items;
@@ -209,7 +222,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.data = [...data];
 
       setTimeout(() => {
-        document.querySelector('#widthReference')['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.minWidth || this.minColumnWidth).reduce((a, b) => a + b, 0) + 10) + 'px';
+        document.querySelector('#widthReference')!['style']['min-width'] = (this.indexWidth + this.columns.map(c => c.minWidth || this.minColumnWidth).reduce((a, b) => a + b, 0) + 10) + 'px';
         this.setupTableEvents();
       }, 0);
     }
@@ -229,6 +242,12 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   setupTableEvents() {
     this.table = document.getElementById('spreadTable');
 
+    this.setColumnsWidth();
+
+    if (this.table!["eventListeners"]()!.length) {
+      return;
+    }
+
     document.addEventListener('scroll', (e) => { this.isDisplayContextMenu = false; this.isDisplayColumnMenu = false; }, true);
 
     this.table?.addEventListener("selectstart", () => {
@@ -241,13 +260,11 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
     this.table?.addEventListener("keydown", (e) => { this.keyDownCall(e) });
 
-    this.setColumnsWidth();
-
     window.addEventListener('resize', this.setColumnsWidth);
 
     const target = document.getElementById('spreadTable');
 
-    target.addEventListener('paste', (event) => {
+    target!.addEventListener('paste', (event) => {
       let paste = (event['clipboardData'] || window['clipboardData']).getData('text');
 
       this.handlePaste(paste);
@@ -259,14 +276,14 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   }
 
   setColumnsWidth = () => {
-    const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
+    const headerWidth = document.querySelector('#widthReference')!.clientWidth - 0.1;
     const columnsWidthSum = this.columns.map(c => { return c.minWidth || this.minColumnWidth }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
-    document.querySelector('cdk-virtual-scroll-viewport')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
-    document.getElementById('spread-table-header')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+    document.querySelector('cdk-virtual-scroll-viewport')!['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+    document.getElementById('spread-table-header')!['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
     if (headerWidth > columnsWidthSum) {
       this.columns.map(c => {
         const percentage = (c.minWidth || this.minColumnWidth) * 100 / (columnsWidthSum - this.indexWidth - 10);
-        c.minWidth = c.minWidth + ((headerWidth - columnsWidthSum) * percentage / 100);
+        c.minWidth = c.minWidth! + ((headerWidth - columnsWidthSum) * percentage / 100);
       });
     }
   }
@@ -358,7 +375,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
         case 'ArrowLeft':
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
-            let nextCell = null;
+            let nextCell: Cell | null = null;
             if (this.selectedCellCoordinates.columnIndex - 1 >= 0) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex - 1);
@@ -372,7 +389,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
         case 'ArrowRight':
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
-            let nextCell = null;
+            let nextCell: Cell | null = null;
             if (this.selectedCellCoordinates.columnIndex + 1 < this.columns.length) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex + 1);
@@ -386,7 +403,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
         case 'ArrowUp':
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
-            let nextCell = null;
+            let nextCell: Cell | null = null;
             if (this.selectedCellCoordinates.rowIndex > 0) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex - 1, this.selectedCellCoordinates.columnIndex);
@@ -400,7 +417,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
         case 'ArrowDown':
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
-            let nextCell = null;
+            let nextCell: Cell | null = null;
             if (this.selectedCellCoordinates.rowIndex + 1 < this.data.length) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex + 1, this.selectedCellCoordinates.columnIndex);
@@ -415,15 +432,17 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
         case 'Shift':
           break;
         case 'Enter':
-          let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
-          this.doubleClick(selectedCell);
+          if (this.selectedCellCoordinates) {
+            let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+            this.doubleClick(selectedCell);
+          }
           break;
         default:
           if (event.ctrlKey) {
 
             switch (event.key) {
               case 'v':
-                if (navigator.clipboard && navigator.clipboard.readText) {
+                if (navigator.clipboard && navigator.clipboard.readText!) {
                   this.handlePaste();
                 }
                 break;
@@ -773,7 +792,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     this.isDisplayContextMenu = true;
     this.isDisplayColumnMenu = false;
 
-    this.createContextMenuItems();
+    this.createContextMenuItems(this.columns[cell.columnIndex]);
 
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     return true;
@@ -793,7 +812,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.isDisplayColumnMenu = true;
       this.isDisplayContextMenu = false;
 
-      this.createColumnMenuItems();
+      this.createColumnMenuItems(column);
 
       this.columnMenuPosition = { x: event.clientX, y: event.clientY, column: column };
       return true;
