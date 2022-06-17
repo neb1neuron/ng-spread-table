@@ -12,12 +12,17 @@ export class CustomModalComponent implements OnInit {
   @Input() bodyText = "";
   @Input() okButtonText = "";
   @Input() cancelButtonText = "";
+  @Input() value = "";
 
   constructor() { }
 
   ngOnInit() {
-    this.bodyText
+    this.input.setValue(this.value);
   }
 
-  emailFormControl = new FormControl('', [Validators.required]);
+  input = new FormControl(this.value, [Validators.required]);
+
+  getValue() {
+    return this.input.value;
+  }
 }

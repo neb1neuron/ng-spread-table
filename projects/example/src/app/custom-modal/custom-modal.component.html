@@ -5,9 +5,10 @@
                     appearance="fill">
       <mat-label>{{bodyText}}</mat-label>
       <input type="text"
+             autocomplete="off"
              matInput
-             [formControl]="emailFormControl">
-      <mat-error *ngIf="emailFormControl.hasError('required')">
+             [formControl]="input">
+      <mat-error *ngIf="input.hasError('required')">
         Required
       </mat-error>
     </mat-form-field>
@@ -19,6 +20,7 @@
   <button mat-button
           mat-dialog-close>{{cancelButtonText}}</button>
   <button mat-button
-          [mat-dialog-close]="emailFormControl.value"
+          [mat-dialog-close]="getValue()"
+          [disabled]="input.invalid"
           cdkFocusInitial>{{okButtonText}}</button>
 </mat-dialog-actions>

@@ -77,10 +77,6 @@ export class AppComponent {
     this.data = products;
   }
 
-  // addColumn() {
-  //   this.gridInstance.columns.push(new Column({ displayName: 'New Column', name: 'aaa', minWidth: 150 }));
-  // }
-
   getSpreadTable() {
     console.log(this.gridInstance as SpreadTableComponent);
     this.gridInstance.headerBgColor = this.randomColor().backgroundColor;
@@ -120,6 +116,8 @@ export class AppComponent {
     if (event.menuEvent === 'addColumnEvent') {
       const result = await this.openDialog(`Add new column`, 'Column name', 'Add', 'Cancel');
 
+      if (!result) return;
+
       this.data.forEach((element: any) => {
         element[result] = '';
       });
@@ -136,7 +134,9 @@ export class AppComponent {
     }
 
     if (event.menuEvent === 'renameColumnEvent') {
-      const result = await this.openDialog(`Rename - ${event.column!.displayName}`, 'Column name', 'Rename', 'Cancel');
+      const result = await this.openDialog(`Rename - ${event.column!.displayName}`, 'Column name', 'Rename', 'Cancel', event.column!.displayName);
+
+      if (!result) return;
 
       this.data.forEach((element: any) => {
         element[result] = element[event.column!.name];
@@ -151,13 +151,14 @@ export class AppComponent {
     }
   }
 
-  async openDialog(headerText: string, bodyText: string, okButtonText: string, cancelButtonText: string) {
+  async openDialog(headerText: string, bodyText: string, okButtonText: string, cancelButtonText: string, value: string = '') {
     const dialogRef = this.dialog.open(CustomModalComponent);
 
     dialogRef.componentInstance.headerText = headerText;
     dialogRef.componentInstance.bodyText = bodyText;
     dialogRef.componentInstance.okButtonText = okButtonText;
     dialogRef.componentInstance.cancelButtonText = cancelButtonText;
+    dialogRef.componentInstance.value = value;
 
     const result = await firstValueFrom(dialogRef.afterClosed());
 
