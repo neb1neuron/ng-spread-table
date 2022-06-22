@@ -32,6 +32,8 @@ export class Column {
   public editable?= true;
   public resizable?= true;
   public validators?: any[] | undefined;
+  public editorComponent?: any | undefined;
+  public editorParams?: any | undefined;
 
   constructor(obj?: Column) {
     Object.assign(this, obj);

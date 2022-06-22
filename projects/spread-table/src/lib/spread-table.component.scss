@@ -183,7 +183,7 @@ cdk-virtual-scroll-viewport {
       border-radius: 2px;
     }
 
-    .cell-in-edit {
+    ::ng-deep .cell-in-edit {
       height: 100%;
       outline: none;
       border: none;
@@ -327,17 +327,13 @@ cdk-virtual-scroll-viewport {
 
     .column-menu {
       padding: 3px 8px;
-      color: #8888887b;
-
-      &:hover {
-        color: #ffffff;
-      }
+      color: inherit;
     }
 
     .column-sizer {
       width: 2px;
       cursor: col-resize;
-      background: #ffffff78;
+      // background: #ffffff78;
       border-radius: 5px;
       height: 70%;
       position: relative;

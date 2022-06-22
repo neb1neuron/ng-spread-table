@@ -1,0 +1,10 @@
+::ng-deep .cell-in-edit {
+  height: 100%;
+  outline: none;
+  border: none;
+
+  &:focus {
+    outline: none;
+    border: none;
+  }
+}

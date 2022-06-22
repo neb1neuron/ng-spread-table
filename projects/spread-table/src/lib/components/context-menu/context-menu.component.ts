@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ContextMenuModel } from '.././models/context-menu.model';
+import { ContextMenuModel } from '../../models/context-menu.model';
 
 @Component({
   selector: 'app-context-menu',

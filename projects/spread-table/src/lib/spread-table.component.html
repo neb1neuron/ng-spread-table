@@ -24,6 +24,7 @@
                (mousedown)="openColumnMenu($event, column)"><i class="fas fa-bars"></i></div>
           <div *ngIf="column.resizable"
                class="column-sizer"
+               [style.background]="headerColor"
                (mousedown)="clickResizer($event, column)"
                (dblclick)="resetColumnWidths();"></div>
         </div>
@@ -38,7 +39,7 @@
     <div #spreadTable
          tabindex="-1"
          class="spread-table"
-         contenteditable="true"
+         contenteditable="false"
          id="spreadTable">
       <div contenteditable="false"
            class="spread-tbody">
@@ -66,11 +67,16 @@
                  class="error spread-table-tooltip">
               <div class="spread-cell-value hideextra"
                    *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div>
-              <input *ngIf="isInEditMode(row.cells[j])"
+              <!-- <input *ngIf="isInEditMode(row.cells[j])"
                      type="text"
                      class="cell-in-edit w-100"
                      (blur)="setCellValue(columns[j],row.cells[j])"
-                     [formControlName]="columns[j].name" />
+                     [formControlName]="columns[j].name" /> -->
+              <app-editor *ngIf="isInEditMode(row.cells[j])"
+                          style="height: 100%"
+                          [editorParams]="{editorComponent:column.editorComponent ,data: this.form.value[column.name], column:column}"
+                          (setValue)="setCellValue(columns[j],row.cells[j],$event)">
+              </app-editor>
               <span *ngIf="row.cells[j].errors"
                     class="validation-errors spread-table-tooltiptext spread-table-tooltip-bottom"
                     [innerHtml]="row.cells[j].errors"></span>

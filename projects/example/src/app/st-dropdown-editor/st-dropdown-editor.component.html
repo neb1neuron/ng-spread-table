@@ -1,0 +1,9 @@
+<select style="width: 100%;height:100%;"
+        autofocus
+        [formControl]="params?.input"
+        (change)="select($event)"
+        class="form-control">
+  <option [style.background]="item == params?.input.value ? '#dbf2ff' : ''"
+          *ngFor="let item of params?.column?.editorParams?.items"
+          [value]="item">{{item}}</option>
+</select>

@@ -5,6 +5,7 @@ import { Column, Change, ContextMenuModel, SpreadTableComponent, UndoRedoService
 import { RequiredValidator } from './custom-validators/required-validator';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomModalComponent } from './custom-modal/custom-modal.component';
+import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-editor.component';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +13,13 @@ import { CustomModalComponent } from './custom-modal/custom-modal.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  frameworkComponents = {
+    dropdownEditor: StDropdownEditorComponent
+  };
+
   columns: Column[] = [
     new Column({ displayName: 'Id', name: 'id', editable: false, resizable: false }),
-    new Column({ displayName: 'Album Id', name: 'albumId' }),
+    new Column({ displayName: 'Album Id', name: 'albumId', editorComponent: this.frameworkComponents.dropdownEditor, editorParams: { items: [1, 2, 3, 4] } }),
     new Column({ displayName: 'Title', name: 'title', minWidth: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
     new Column({ displayName: 'Url', name: 'url', minWidth: 300 }),
     new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300 })];
@@ -73,7 +78,7 @@ export class AppComponent {
   private async getData() {
     // const products: any = await lastValueFrom(this.httpClient.get('../assets/data.json'));
     const products: any = await lastValueFrom(this.httpClient.get('https://jsonplaceholder.typicode.com/photos'));
-
+    console.log(products);
     this.data = products;
   }
 

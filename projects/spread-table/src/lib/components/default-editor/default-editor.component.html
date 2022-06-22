@@ -1,0 +1,4 @@
+<input class="cell-in-edit w-100"
+       (keydown)="onKeyDown($event)"
+       (blur)="setValue.emit(params.input.value)"
+       [formControl]="params.input" />

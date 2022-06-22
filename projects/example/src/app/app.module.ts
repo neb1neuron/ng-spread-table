@@ -14,12 +14,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CustomModalComponent } from './custom-modal/custom-modal.component';
 import { MatInputModule } from '@angular/material/input';
+import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-editor.component';
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
-    CustomModalComponent
-  ],
+    CustomModalComponent,
+      StDropdownEditorComponent
+   ],
   imports: [
     BrowserModule,
     CommonModule,

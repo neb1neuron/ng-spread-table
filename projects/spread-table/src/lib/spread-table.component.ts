@@ -435,6 +435,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           if (this.selectedCellCoordinates) {
             let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
             this.doubleClick(selectedCell);
+            event.stopPropagation();
           }
           break;
         default:
@@ -465,6 +466,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
       if (event.key === 'Enter' || event.key === 'Escape') {
         this.table?.focus();
+        event.stopPropagation();
       }
     }
   }
@@ -669,7 +671,11 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     }
   }
 
-  setCellValue(column: Column, cell: Cell) {
+  setCellValue(column: Column, cell: Cell, value = null) {
+    if (value !== null) {
+      this.form.get(column.name)?.setValue(value);
+    }
+
     if (cell.value !== this.form.value[column.name]) {
       const changes = [{
         coordinates:
@@ -686,6 +692,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     }
 
     this.isEditMode = false;
+    this.table?.focus();
 
     if (this.selectedCellCoordinates?.rowIndex === cell.rowIndex &&
       this.selectedCellCoordinates?.columnIndex === cell.columnIndex) {

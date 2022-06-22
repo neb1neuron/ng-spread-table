@@ -1,16 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SpreadTableComponent } from './spread-table.component';
-import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { ContextMenuComponent } from './components/context-menu/context-menu.component';
+import { EditorComponent } from './components/editor/editor.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { EditorDirective } from './components/editor/editor.directive';
+import { DefaultEditorComponent } from './components/default-editor/default-editor.component';
 
-
+let components = [SpreadTableComponent, ContextMenuComponent, EditorComponent, EditorDirective, DefaultEditorComponent];
 
 @NgModule({
-  declarations: [SpreadTableComponent, ContextMenuComponent],
+  declarations: components,
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -18,6 +21,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ReactiveFormsModule,
     ScrollingModule
   ],
-  exports: [SpreadTableComponent]
+  exports: components
 })
 export class SpreadTableModule { }
