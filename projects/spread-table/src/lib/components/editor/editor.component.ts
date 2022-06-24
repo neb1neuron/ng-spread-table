@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, Type, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { IEditor, IEditorComponent, IEditorParams } from '../../models/editor.models';
 import { DefaultEditorComponent } from '../default-editor/default-editor.component';

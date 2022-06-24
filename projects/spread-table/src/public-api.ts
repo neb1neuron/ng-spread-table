@@ -13,3 +13,6 @@ export * from './lib/models/editor.models';
 export * from './lib/components/editor/editor.directive'
 export * from './lib/components/editor/editor.component'
 export * from './lib/components/default-editor/default-editor.component'
+export * from './lib/components/renderer/renderer.directive'
+export * from './lib/components/renderer/renderer.component'
+export * from './lib/components/default-renderer/default-renderer.component'

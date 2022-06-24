@@ -65,8 +65,12 @@
                *ngFor="let column of columns;let j = index">
             <div style="height: 100%;"
                  class="error spread-table-tooltip">
-              <div class="spread-cell-value hideextra"
-                   *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div>
+              <!-- <div class="spread-cell-value hideextra"
+                   *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div> -->
+              <app-renderer *ngIf="!isInEditMode(row.cells[j])"
+                            style="height: 100%"
+                            [rendererParams]="{rendererComponent:column.rendererComponent ,data: data, column:column, columnIndex:row.cells[j].columnIndex, rowIndex:row.cells[j].rowIndex, reDraw}">
+              </app-renderer>
               <!-- <input *ngIf="isInEditMode(row.cells[j])"
                      type="text"
                      class="cell-in-edit w-100"

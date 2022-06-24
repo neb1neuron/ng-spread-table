@@ -9,8 +9,11 @@ import { EditorComponent } from './components/editor/editor.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { EditorDirective } from './components/editor/editor.directive';
 import { DefaultEditorComponent } from './components/default-editor/default-editor.component';
+import { RendererComponent } from './components/renderer/renderer.component';
+import { RendererDirective } from './components/renderer/renderer.directive';
+import { DefaultRendererComponent } from './components/default-renderer/default-renderer.component';
 
-let components = [SpreadTableComponent, ContextMenuComponent, EditorComponent, EditorDirective, DefaultEditorComponent];
+let components = [SpreadTableComponent, ContextMenuComponent, EditorComponent, EditorDirective, DefaultEditorComponent, RendererComponent, RendererDirective, DefaultRendererComponent];
 
 @NgModule({
   declarations: components,

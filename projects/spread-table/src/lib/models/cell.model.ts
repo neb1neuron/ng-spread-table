@@ -34,6 +34,8 @@ export class Column {
   public validators?: any[] | undefined;
   public editorComponent?: any | undefined;
   public editorParams?: any | undefined;
+  public rendererComponent?: any | undefined;
+  public rendererParams?: any | undefined;
 
   constructor(obj?: Column) {
     Object.assign(this, obj);

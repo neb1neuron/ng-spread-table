@@ -17,7 +17,8 @@
 
 <div class="p-3 w-100"
      style="height: 700px;">
-  <spread-table #spreadTable
+  <spread-table *ngIf="data"
+                #spreadTable
                 [columns]="columns"
                 [minColumnWidth]="100"
                 [rowHeight]="36"

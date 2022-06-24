@@ -4,6 +4,7 @@ import { Cell, Column, Row } from './models/cell.model';
 import { SpreadTable } from './models/spread-table.models';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'spread-table',
@@ -26,6 +27,8 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   @Output() cellValueChange = new EventEmitter<Change[]>();
   @Output() contextMenuEvent = new EventEmitter<ContextMenuModel>();
   @Output() columnMenuEvent = new EventEmitter<ContextMenuModel>();
+
+  reDraw = new BehaviorSubject<{ columnIndex: number, rowIndex: number }[]>([]);
 
   data: Row[] = [];
 
@@ -209,7 +212,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
   ngOnChanges(changes: SimpleChanges): void {
     let data: Row[] = [];
-    if (changes.rawData.currentValue) {
+    if (changes.rawData.currentValue?.length) {
       for (let i = 0; i < this.rawData.length; i++) {
         let row = new Row({ rowIndex: i, cells: [] });
 
@@ -342,6 +345,12 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     return cell.rowIndex === rowIndex2 && cell.columnIndex === cellIndex2 && this.isEditMode;
   }
 
+
+  redrawSelectedCells() {
+    this.reDraw.next([...this.getSelectedCells().map(cell => { return { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex } })]);
+  };
+
+
   keyDownCall(e: Event) {
 
     let event = e as KeyboardEvent;
@@ -369,6 +378,9 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           this.deleteSelectedCellsValues();
 
           this.isEditMode = false;
+
+          this.redrawSelectedCells();
+
           e.stopPropagation();
           e.preventDefault();
           break;
@@ -445,6 +457,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
               case 'v':
                 if (navigator.clipboard && navigator.clipboard.readText!) {
                   this.handlePaste();
+                  this.redrawSelectedCells();
                 }
                 break;
               case 'c':
@@ -452,9 +465,11 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
                 break;
               case 'z':
                 this.undo();
+                this.redrawSelectedCells();
                 break;
               case 'y':
                 this.redo();
+                this.redrawSelectedCells();
                 break;
               default:
                 break;
@@ -560,6 +575,8 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.undoRedoService.setChange(changes);
       this.cellValueChange.emit(changes);
     }
+
+    this.redrawSelectedCells();
   }
 
   handleCopy = async () => {
@@ -659,15 +676,15 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
         this.setCellValueAndValidate(cell, value);
 
-        setTimeout(() => {
-          cell.selected = true;
-        }, 200);
+        cell.selected = true;
       }
     }
 
     if (changes.length > 0) {
       this.undoRedoService.setChange(changes);
       this.cellValueChange.emit(changes);
+
+      this.redrawSelectedCells();
     }
   }
 
@@ -881,6 +898,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
   private setCellValueAndValidate(cell: Cell, value: any) {
     cell.value = value;
+    cell.selected = true;
     this.formControl = new FormControl(value, this.columns[cell.columnIndex].validators);
     const controlErrors = this.formControl.errors;
     let cellErrors: string[] = [];
