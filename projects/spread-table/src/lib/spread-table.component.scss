@@ -331,7 +331,7 @@ cdk-virtual-scroll-viewport {
     }
 
     .column-sizer {
-      width: 2px;
+      width: 5px;
       cursor: col-resize;
       // background: #ffffff78;
       border-radius: 5px;
@@ -389,4 +389,11 @@ cdk-virtual-scroll-viewport {
 
 #widthReference {
   width: 100%;
+}
+
+::ng-deep app-default-renderer{
+  width: inherit;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }

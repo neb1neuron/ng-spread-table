@@ -6,6 +6,7 @@ import { RequiredValidator } from './custom-validators/required-validator';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomModalComponent } from './custom-modal/custom-modal.component';
 import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-editor.component';
+import { StCustomRendererComponent } from './st-custom-renderer/st-custom-renderer.component';
 
 @Component({
   selector: 'app-root',
@@ -14,15 +15,16 @@ import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-edit
 })
 export class AppComponent {
   frameworkComponents = {
-    dropdownEditor: StDropdownEditorComponent
+    dropdownEditor: StDropdownEditorComponent,
+    customRenderer: StCustomRendererComponent
   };
 
   columns: Column[] = [
     new Column({ displayName: 'Id', name: 'id', editable: false, resizable: false }),
     new Column({ displayName: 'Album Id', name: 'albumId', editorComponent: this.frameworkComponents.dropdownEditor, editorParams: { items: [1, 2, 3, 4] } }),
     new Column({ displayName: 'Title', name: 'title', minWidth: 400, validators: [RequiredValidator.required(), RequiredValidator.requiredString()] }),
-    new Column({ displayName: 'Url', name: 'url', minWidth: 300 }),
-    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300 })];
+    new Column({ displayName: 'Url', name: 'url', minWidth: 300, rendererComponent: this.frameworkComponents.customRenderer }),
+    new Column({ displayName: 'Thumbnail Url', name: 'thumbnailUrl', minWidth: 300, rendererComponent: this.frameworkComponents.customRenderer })];
 
   data: any;
   event!: string;

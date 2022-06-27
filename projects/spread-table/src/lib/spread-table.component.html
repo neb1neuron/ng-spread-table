@@ -69,6 +69,7 @@
                    *ngIf="!isInEditMode(row.cells[j])">{{getCellValue(row,column.name)}}</div> -->
               <app-renderer *ngIf="!isInEditMode(row.cells[j])"
                             style="height: 100%"
+                            [style.width]="column.minWidth - 16 + 'px'"
                             [rendererParams]="{rendererComponent:column.rendererComponent ,data: data, column:column, columnIndex:row.cells[j].columnIndex, rowIndex:row.cells[j].rowIndex, reDraw}">
               </app-renderer>
               <!-- <input *ngIf="isInEditMode(row.cells[j])"

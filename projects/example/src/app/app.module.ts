@@ -15,13 +15,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { CustomModalComponent } from './custom-modal/custom-modal.component';
 import { MatInputModule } from '@angular/material/input';
 import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-editor.component';
+import { StCustomRendererComponent } from './st-custom-renderer/st-custom-renderer.component';
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     CustomModalComponent,
-      StDropdownEditorComponent
-   ],
+    StDropdownEditorComponent,
+    StCustomRendererComponent
+  ],
   imports: [
     BrowserModule,
     CommonModule,
@@ -37,6 +39,8 @@ import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-edit
     MatInputModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }
