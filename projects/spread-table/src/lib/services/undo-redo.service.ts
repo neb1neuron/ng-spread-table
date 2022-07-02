@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 export class Change {
   beforeValue: any;
   afterValue: any;
-  coordinates = { rowIndex: 0, columnIndex: 0 }
+  coordinates = { rowIndex: 0, columnName: '' }
   constructor(pagObj?: Change) {
     Object.assign(this, pagObj);
   }

@@ -4,7 +4,6 @@ import { Cell, Column, Row } from './models/cell.model';
 import { SpreadTable } from './models/spread-table.models';
 import { Change, UndoRedoService } from './services/undo-redo.service';
 import { ContextMenuModel } from './models/context-menu.model';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'spread-table',
@@ -28,9 +27,8 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   @Output() contextMenuEvent = new EventEmitter<ContextMenuModel>();
   @Output() columnMenuEvent = new EventEmitter<ContextMenuModel>();
 
-  reDraw = new BehaviorSubject<{ columnIndex: number, rowIndex: number }[]>([]);
-
   data: Row[] = [];
+  firstLoad = true;
 
   focus = true;
   form = new FormGroup({});
@@ -41,7 +39,8 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   startCellIndex = 0;
   endRowIndex = 0;
   endCellIndex = 0;
-  selectedCellCoordinates?: { rowIndex: number, columnIndex: number } = undefined;
+  // selectedCellCoordinates?: { rowIndex: number, columnIndex: number } = undefined;
+  selectedCellCoordinates?: { rowIndex: number, columnName: string } = undefined;
   isEditMode = false;
   columnBeingResized: Column | null = null;
   htmlColumnBeingResized = null;
@@ -211,13 +210,15 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    changes
     let data: Row[] = [];
-    if (changes.rawData.currentValue?.length) {
+    if (this.firstLoad && this.rawData?.length && this.columns?.length) {
+      this.firstLoad = false;
       for (let i = 0; i < this.rawData.length; i++) {
         let row = new Row({ rowIndex: i, cells: [] });
 
         for (let j = 0; j < this.columns.length; j++) {
-          row.cells.push({ columnName: this.columns[j].name, value: this.rawData[i][this.columns[j].name], originalValue: this.rawData[i][this.columns[j].name], rowIndex: i, columnIndex: j });
+          row.cells.push({ columnName: this.columns[j].name, value: this.rawData[i][this.columns[j].name], originalValue: this.rawData[i][this.columns[j].name], rowIndex: i });
         }
         data.push(row);
       }
@@ -236,6 +237,13 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
         this.originalColumnsWidth[c.name] = c.minWidth;
       });
     }
+  }
+
+  addColumn(column: Column) {
+    this.data.forEach(row => {
+      row.cells.splice(this.columns.indexOf(column), 0, new Cell({ columnName: column.name, value: '', originalValue: '', rowIndex: row.rowIndex }));
+    });
+    this.setColumnsWidth();
   }
 
   getCellValue(row: Row, columnName: string) {
@@ -300,22 +308,22 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
     this.clearSelection();
 
-    this.selectTo(cell.rowIndex, cell.columnIndex);
+    this.selectTo(cell.rowIndex, cell.columnName);
   }
 
-  getDataCell(rowIndex: number, columnIndex: number): Cell {
-    return this.data.find(d => d.rowIndex === rowIndex)?.cells.find(c => c.columnIndex === columnIndex) || new Cell;
+  getDataCell(rowIndex: number, columnName: string): Cell {
+    return this.data.find(d => d.rowIndex === rowIndex)?.cells.find(c => c.columnName === columnName) || new Cell;
   }
 
   doubleClick(cell: Cell) {
-    if (this.selectedCellCoordinates?.rowIndex === cell.rowIndex && this.selectedCellCoordinates.columnIndex === cell.columnIndex && this.isEditMode) return;
+    if (this.selectedCellCoordinates?.rowIndex === cell.rowIndex && this.selectedCellCoordinates.columnName === cell.columnName && this.isEditMode) return;
     this.clearSelection();
     this.isDisplayColumnMenu = false;
     this.isDisplayContextMenu = false;
     this.isMouseDown = false;
     this.isEditMode = true;
     this.focus = true;
-    this.selectedCellCoordinates = { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex };
+    this.selectedCellCoordinates = { rowIndex: cell.rowIndex, columnName: cell.columnName };
 
     this.form = new FormGroup({});
 
@@ -323,7 +331,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.form.addControl(column.name, new FormControl(this.getCellValue(this.data[cell.rowIndex], column.name), column.validators));
     });
 
-    this.startCellIndex = cell.columnIndex;
+    this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName));
     this.startRowIndex = cell.rowIndex;
 
     if (this.focus) {
@@ -339,16 +347,11 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
   isInEditMode(cell: Cell) {
     if (!this.selectedCellCoordinates) return false;
-    const cellIndex2 = this.selectedCellCoordinates.columnIndex;
+    const cellColumnName = this.selectedCellCoordinates.columnName;
     const rowIndex2 = this.selectedCellCoordinates.rowIndex;
 
-    return cell.rowIndex === rowIndex2 && cell.columnIndex === cellIndex2 && this.isEditMode;
+    return cell.rowIndex === rowIndex2 && cell.columnName === cellColumnName && this.isEditMode;
   }
-
-
-  redrawSelectedCells() {
-    this.reDraw.next([...this.getSelectedCells().map(cell => { return { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex } })]);
-  };
 
 
   keyDownCall(e: Event) {
@@ -379,64 +382,65 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
           this.isEditMode = false;
 
-          this.redrawSelectedCells();
-
           e.stopPropagation();
           e.preventDefault();
           break;
         case 'ArrowLeft':
           if (this.selectedCellCoordinates) {
-            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
-            if (this.selectedCellCoordinates.columnIndex - 1 >= 0) {
+            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates.columnName));
+            if (columnIndex - 1 >= 0) {
               if (currentCell) currentCell.selected = false;
-              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex - 1);
+              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.columns[columnIndex - 1].name);
             }
             if (nextCell) {
               nextCell.selected = true;
-              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnIndex: nextCell.columnIndex };
+              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnName: nextCell.columnName };
             }
           }
           break;
         case 'ArrowRight':
           if (this.selectedCellCoordinates) {
-            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
-            if (this.selectedCellCoordinates.columnIndex + 1 < this.columns.length) {
+            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates.columnName));
+            if (columnIndex + 1 < this.columns.length) {
               if (currentCell) currentCell.selected = false;
-              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex + 1);
+              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.columns[columnIndex + 1].name);
             }
             if (nextCell) {
               nextCell.selected = true;
-              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnIndex: nextCell.columnIndex };
+              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnName: nextCell.columnName };
             }
           }
           break;
         case 'ArrowUp':
           if (this.selectedCellCoordinates) {
-            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
+            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates.columnName));
             if (this.selectedCellCoordinates.rowIndex > 0) {
               if (currentCell) currentCell.selected = false;
-              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex - 1, this.selectedCellCoordinates.columnIndex);
+              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex - 1, this.columns[columnIndex].name);
             }
             if (nextCell) {
               nextCell.selected = true;
-              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnIndex: nextCell.columnIndex };
+              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnName: nextCell.columnName };
             }
           }
           break;
         case 'ArrowDown':
           if (this.selectedCellCoordinates) {
-            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+            let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
             if (this.selectedCellCoordinates.rowIndex + 1 < this.data.length) {
               if (currentCell) currentCell.selected = false;
-              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex + 1, this.selectedCellCoordinates.columnIndex);
+              nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex + 1, this.selectedCellCoordinates.columnName);
             }
             if (nextCell) {
               nextCell.selected = true;
-              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnIndex: nextCell.columnIndex };
+              this.selectedCellCoordinates = { rowIndex: nextCell.rowIndex, columnName: nextCell.columnName };
             }
           }
           break;
@@ -445,7 +449,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           break;
         case 'Enter':
           if (this.selectedCellCoordinates) {
-            let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnIndex);
+            let selectedCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             this.doubleClick(selectedCell);
             event.stopPropagation();
           }
@@ -457,7 +461,6 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
               case 'v':
                 if (navigator.clipboard && navigator.clipboard.readText!) {
                   this.handlePaste();
-                  this.redrawSelectedCells();
                 }
                 break;
               case 'c':
@@ -465,11 +468,9 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
                 break;
               case 'z':
                 this.undo();
-                this.redrawSelectedCells();
                 break;
               case 'y':
                 this.redo();
-                this.redrawSelectedCells();
                 break;
               default:
                 break;
@@ -492,7 +493,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     if (lastChange) {
       this.clearSelection();
       lastChange.forEach(change => {
-        let cellData = this.getDataCell(change.coordinates.rowIndex, change.coordinates.columnIndex);
+        let cellData = this.getDataCell(change.coordinates.rowIndex, change.coordinates.columnName);
         if (cellData) {
           this.setCellValueAndValidate(cellData, change.beforeValue);
           cellData.selected = true;
@@ -500,7 +501,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
         changes.push({
           coordinates:
-            { rowIndex: change.coordinates.rowIndex, columnIndex: change.coordinates.columnIndex },
+            { rowIndex: change.coordinates.rowIndex, columnName: change.coordinates.columnName },
           beforeValue: change.afterValue,
           afterValue: change.beforeValue
         });
@@ -515,7 +516,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     if (lastChange) {
       this.clearSelection();
       lastChange.forEach(change => {
-        let cellData = this.getDataCell(change.coordinates.rowIndex, change.coordinates.columnIndex);
+        let cellData = this.getDataCell(change.coordinates.rowIndex, change.coordinates.columnName);
         if (cellData) {
           this.setCellValueAndValidate(cellData, change.beforeValue);
           cellData.selected = true;
@@ -523,7 +524,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
         changes.push({
           coordinates:
-            { rowIndex: change.coordinates.rowIndex, columnIndex: change.coordinates.columnIndex },
+            { rowIndex: change.coordinates.rowIndex, columnName: change.coordinates.columnName },
           beforeValue: change.afterValue,
           afterValue: change.beforeValue
         });
@@ -541,7 +542,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     selectedCells.forEach(cell => {
       changes.push({
         coordinates:
-          { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
+          { rowIndex: cell.rowIndex, columnName: cell.columnName },
         beforeValue: cell.value,
         afterValue: ''
       });
@@ -564,7 +565,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     selectedCells.forEach(cell => {
       changes.push({
         coordinates:
-          { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
+          { rowIndex: cell.rowIndex, columnName: cell.columnName },
         beforeValue: cell.value,
         afterValue: ''
       });
@@ -576,7 +577,6 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.cellValueChange.emit(changes);
     }
 
-    this.redrawSelectedCells();
   }
 
   handleCopy = async () => {
@@ -640,7 +640,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     if (selectedCells.length === 0) return;
 
     const rowIndexDifference = selectedCells[0].rowIndex;
-    const columnIndexDifference = selectedCells[0].columnIndex;
+    const columnIndexDifference = this.columns.indexOf(this.columns.find(c => c.name === selectedCells[0].columnName));
     this.clearSelection();
     let changes: Change[] = [];
 
@@ -651,14 +651,14 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
       }
       for (let j = 0; j < copyData[i].length; j++) {
-        const selectedCell = selectedCells.find(c => c.rowIndex === i + rowIndexDifference && c.columnIndex === j + columnIndexDifference);
+        const selectedCell = selectedCells.find(c => c.rowIndex === i + rowIndexDifference && this.columns.indexOf(this.columns.find(col => col.name === c.columnName)) === j + columnIndexDifference);
 
-        const cell = selectedRow?.cells.find(c => c.columnIndex === j + columnIndexDifference);
-        if (!cell || !this.columns[cell.columnIndex].editable) continue;
+        const cell = selectedRow?.cells.find(c => this.columns.indexOf(this.columns.find(col => col.name === c.columnName)) === j + columnIndexDifference);
+        if (!cell || !this.columns.find(col => col.name === cell.columnName).editable) continue;
         cell.selected = false;
 
         const cellRowIndex = cell.rowIndex;
-        const cellColumnIndex = cell.columnIndex;
+        const cellColumnIndex = this.columns.indexOf(this.columns.find(col => col.name === cell.columnName));
 
         if (selectedCells.length > 1) {
           if (!selectedCell) continue;
@@ -669,7 +669,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
         changes.push({
           coordinates:
-            { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
+            { rowIndex: cell.rowIndex, columnName: cell.columnName },
           beforeValue: cell.value,
           afterValue: value
         });
@@ -683,20 +683,20 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     if (changes.length > 0) {
       this.undoRedoService.setChange(changes);
       this.cellValueChange.emit(changes);
-
-      this.redrawSelectedCells();
     }
   }
 
-  setCellValue(column: Column, cell: Cell, value = null) {
+  setCellValue(row: Row, column: Column, value = null) {
     if (value !== null) {
       this.form.get(column.name)?.setValue(value);
     }
 
+    const cell = row.cells.find(c => c.columnName === column.name);
+
     if (cell.value !== this.form.value[column.name]) {
       const changes = [{
         coordinates:
-          { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex },
+          { rowIndex: row.rowIndex, columnName: cell.columnName },
         beforeValue: cell.value,
         afterValue: this.form.value[column.name]
       }];
@@ -712,7 +712,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     this.table?.focus();
 
     if (this.selectedCellCoordinates?.rowIndex === cell.rowIndex &&
-      this.selectedCellCoordinates?.columnIndex === cell.columnIndex) {
+      this.selectedCellCoordinates?.columnName === cell.columnName) {
       cell.selected = true;
     }
   }
@@ -736,7 +736,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       return false;
     }
 
-    if (cell.columnIndex === this.selectedCellCoordinates?.columnIndex &&
+    if (cell.columnName === this.selectedCellCoordinates?.columnName &&
       cell.rowIndex === this.selectedCellCoordinates.rowIndex) {
       return true;
     }
@@ -749,22 +749,24 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     this.table?.focus();
     this.isMouseDown = true;
     this.isEditMode = false;
-    this.selectedCellCoordinates = { rowIndex: cell.rowIndex, columnIndex: cell.columnIndex };
+    this.selectedCellCoordinates = { rowIndex: cell.rowIndex, columnName: cell.columnName };
 
     if (event.shiftKey) {
-      this.selectTo(cell.rowIndex, cell.columnIndex);
+      this.selectTo(cell.rowIndex, cell.columnName);
     } else {
       cell.selected = true;
 
-      this.startCellIndex = cell.columnIndex;
+      this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName));;
       this.startRowIndex = cell.rowIndex;
     }
 
     return false; // prevent text selection
   }
 
-  selectTo(rowIndex: number, columnIndex: number) {
+  selectTo(rowIndex: number, columnName: string) {
     let rowStart, rowEnd, cellStart, cellEnd;
+
+    const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === columnName));
 
     if (rowIndex < this.startRowIndex) {
       rowStart = rowIndex;
@@ -788,7 +790,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     for (var i = rowStart; i <= rowEnd; i++) {
 
       for (var j = cellStart; j <= cellEnd; j++) {
-        let cellData = this.getDataCell(i, j);
+        let cellData = this.getDataCell(i, this.columns[j].name);
         if (cellData) cellData.selected = true;
       }
     }
@@ -812,11 +814,11 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       return false;
     }
 
-    this.editableContextMenu = this.columns[cell.columnIndex].editable || false;
+    this.editableContextMenu = this.columns.find(col => col.name === cell.columnName).editable || false;
     this.isDisplayContextMenu = true;
     this.isDisplayColumnMenu = false;
 
-    this.createContextMenuItems(this.columns[cell.columnIndex]);
+    this.createContextMenuItems(this.columns.find(col => col.name === cell.columnName));
 
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     return true;
@@ -899,7 +901,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   private setCellValueAndValidate(cell: Cell, value: any) {
     cell.value = value;
     cell.selected = true;
-    this.formControl = new FormControl(value, this.columns[cell.columnIndex].validators);
+    this.formControl = new FormControl(value, this.columns.find(col => col.name === cell.columnName).validators);
     const controlErrors = this.formControl.errors;
     let cellErrors: string[] = [];
     if (controlErrors) {

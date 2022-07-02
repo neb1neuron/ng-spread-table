@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { IRendererComponent, IRendererParams } from '../../models/renderer.models';
 
 @Component({

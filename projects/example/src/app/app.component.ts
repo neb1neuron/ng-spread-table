@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { Column, Change, ContextMenuModel, SpreadTableComponent, UndoRedoService } from 'spread-table';
+import { Column, Change, ContextMenuModel, SpreadTableComponent, UndoRedoService, Cell, Row } from 'spread-table';
 import { RequiredValidator } from './custom-validators/required-validator';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomModalComponent } from './custom-modal/custom-modal.component';
@@ -125,19 +125,26 @@ export class AppComponent {
 
       if (!result) return;
 
-      this.data.forEach((element: any) => {
-        element[result] = '';
-      });
-
-      this.data = [...this.data];
-      this.columns.splice(this.columns.indexOf(event.column!) + 1, 0, new Column({ name: result, displayName: result, editable: true, resizable: true, minWidth: 200, }));
+      const newColumn = new Column({ name: result, displayName: result, editable: true, resizable: true, minWidth: 200, });
+      this.columns.splice(this.columns.indexOf(event.column!) + 1, 0, newColumn);
       this.columns = [...this.columns];
+
+      this.gridInstance.data.forEach((row: Row) => {
+        row.cells.splice(this.columns.indexOf(newColumn), 0, new Cell({ columnName: newColumn.name, value: '', originalValue: '', rowIndex: row.rowIndex }));
+      });
+      this.gridInstance.setColumnsWidth();
     }
 
     if (event.menuEvent === 'removeColumnEvent') {
-      this.data = [...this.data];
+      this.gridInstance.data.forEach((row: Row) => {
+        let cells = row.cells.filter((cell: Cell) => cell.columnName !== event.column!.name);
+        row.cells = [...cells];
+      });
+
       this.columns.splice(this.columns.indexOf(event.column!), 1);
       this.columns = [...this.columns];
+
+      this.gridInstance.setColumnsWidth();
     }
 
     if (event.menuEvent === 'renameColumnEvent') {

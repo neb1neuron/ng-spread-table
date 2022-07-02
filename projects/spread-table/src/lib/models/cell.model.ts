@@ -5,7 +5,7 @@ export class Cell {
   public selected?= false;
   public disabled?= false;
   public rowIndex = 0;
-  public columnIndex = 0;
+  //public columnIndex = 0;
   public errors?: string = '';
 
   constructor(obj?: Cell) {

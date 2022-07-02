@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ArgumentOutOfRangeError, BehaviorSubject } from 'rxjs';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { IRenderer, IRendererComponent, IRendererParams } from '../../models/renderer.models';
 import { DefaultRendererComponent } from '../default-renderer/default-renderer.component';
 import { RendererDirective } from './renderer.directive';
@@ -10,7 +9,7 @@ import { RendererDirective } from './renderer.directive';
   templateUrl: './renderer.component.html',
   styleUrls: ['./renderer.component.scss']
 })
-export class RendererComponent implements OnInit, IRenderer {
+export class RendererComponent implements IRenderer, OnChanges {
 
   @Input() rendererParams: IRendererParams;
 
@@ -18,23 +17,12 @@ export class RendererComponent implements OnInit, IRenderer {
 
   constructor() { }
 
-  getValue() {
-    throw new Error('Method not implemented.');
-  }
-
-
   @ViewChild(RendererDirective, { static: true }) rendererContainer!: RendererDirective;
 
-  ngOnInit() {
-    this.render();
-
-    (this.rendererParams.reDraw as BehaviorSubject<{ columnIndex: number, rowIndex: number }[]>)
-      .subscribe(arg => {
-        if (arg.length && arg.find(cell => cell.rowIndex === this.rendererParams.rowIndex && cell.columnIndex === this.rendererParams.columnIndex)) {
-          this.render();
-        }
-      });
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes && this.rendererParams) {
+      this.render();
+    }
   }
 
   private render() {
@@ -42,7 +30,6 @@ export class RendererComponent implements OnInit, IRenderer {
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent<IRendererComponent>(this.rendererParams.rendererComponent ? this.rendererParams.rendererComponent : this.defaultRenderer);
-    this.rendererParams.value = this.rendererParams.data[this.rendererParams.rowIndex].cells[this.rendererParams.columnIndex].value;
     componentRef.instance.stInit(this.rendererParams);
   }
 }
