@@ -48,7 +48,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
     provide: HIGHLIGHT_OPTIONS,
     useValue: {
       fullLibraryLoader: () => import('highlight.js'),
-      themePath: '/ng-spread-table/assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
+      themePath: 'assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
     }
   }],
   bootstrap: [
