@@ -49,11 +49,11 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
     useValue: {
       coreLibraryLoader: () => import('highlight.js/lib/core'),
       languages: {
-        typescript: () => import('highlight.js/lib/languages/typescript'),
-        css: () => import('highlight.js/lib/languages/css'),
-        xml: () => import('highlight.js/lib/languages/xml')
+        typescript: () => import('/ng-spread-table/highlight.js/lib/languages/typescript'),
+        css: () => import('/ng-spread-table/highlight.js/lib/languages/css'),
+        xml: () => import('/ng-spread-table/highlight.js/lib/languages/xml')
       },
-      themePath: 'assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
+      themePath: '/ng-spread-table/assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
     }
   }],
   bootstrap: [
