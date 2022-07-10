@@ -47,12 +47,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
   providers: [{
     provide: HIGHLIGHT_OPTIONS,
     useValue: {
-      coreLibraryLoader: () => import('/ng-spread-table/highlight.js/lib/core'),
-      languages: {
-        typescript: () => import('/ng-spread-table/highlight.js/lib/languages/typescript'),
-        css: () => import('/ng-spread-table/highlight.js/lib/languages/css'),
-        xml: () => import('/ng-spread-table/highlight.js/lib/languages/xml')
-      },
+      fullLibraryLoader: () => import('highlight.js'),
       themePath: '/ng-spread-table/assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
     }
   }],

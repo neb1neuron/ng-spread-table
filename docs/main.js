@@ -151,13 +151,8 @@ AppModule.ɵmod = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵ
 AppModule.ɵinj = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineInjector"]({ providers: [{
             provide: ngx_highlightjs__WEBPACK_IMPORTED_MODULE_8__.HIGHLIGHT_OPTIONS,
             useValue: {
-                coreLibraryLoader: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_core_js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js/lib/core */ 8622)),
-                languages: {
-                    typescript: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_languages_typescript_js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js/lib/languages/typescript */ 5281)),
-                    css: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_languages_css_js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js/lib/languages/css */ 9009)),
-                    xml: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_languages_xml_js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js/lib/languages/xml */ 526))
-                },
-                themePath: 'assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
+                fullLibraryLoader: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_index_js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js */ 7722)),
+                themePath: '/ng-spread-table/assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
             }
         }], imports: [[
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_9__.BrowserModule,
