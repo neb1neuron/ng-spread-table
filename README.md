@@ -258,11 +258,12 @@ The idea was to implement a web spreadsheet with minimal functionality. The beau
 
 ## Versions
 
-### v2.8.0
+### v3.0.0
 
 - update to Angular 13.3.11
-- added possibility to create your customer renderer and editor functionality
+- added possibility to create your customer renderer and editor functionality(see demo)
 - added examples for add, remove, rename column
+- undoRedoService stack size can now be set
 
 ### v2.7.4
 

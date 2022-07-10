@@ -18,6 +18,7 @@
 :white_check_mark: copy/paste/cut in bulk  
 :white_check_mark: copy/paste/cut from and into excel  
 :white_check_mark: custom validators support  
+:white_check_mark: custom renderer and editor  
 :white_check_mark: disabled columns  
 :white_check_mark: undo/redo on single or batch changes  
 :white_check_mark: resizable columns  
@@ -99,16 +100,19 @@ export class AppComponent {
 ```html
 <div class="p-3 w-100"
      style="height: 700px;">
-  <spread-table #spreadTable
-    [columns]="columns"
-    [rowHeight]="30"
-    [indexWidth]="60"
-    [rawData]="data"
-    [extraContextMenuItems]="extraContextMenuItems"
-    [extraColumnMenuItems]="extraColumnMenuItems"
-    (cellValueChange)="onCellValueChange($event)"
-    (contextMenuEvent)="onContextMenuEvent($event)"
-    (columnMenuEvent)="onContextMenuEvent($event)">
+  <spread-table *ngIf="data"
+                #spreadTable
+                [columns]="columns"
+                [minColumnWidth]="100"
+                [rowHeight]="36"
+                [indexWidth]="60"
+                [rawData]="data"
+                [undoRedoStackSize]="20"
+                [extraContextMenuItems]="extraContextMenuItems"
+                [extraColumnMenuItems]="extraColumnMenuItems"
+                (cellValueChange)="onCellValueChange($event)"
+                (contextMenuEvent)="onContextMenuEvent($event)"
+                (columnMenuEvent)="onColumnMenuEvent($event)">
 
   </spread-table>
 </div>
@@ -229,6 +233,12 @@ Note: This plugin is till work in progress
 ```
 
 ## Versions
+### v3.0.0
+
+- update to Angular 13.3.11
+- added possibility to create your customer renderer and editor functionality(see Demo)
+- added examples for add, remove, rename column
+- undoRedoService stack size can now be set
 ### v2.7.4
 - fixed clipboard copy/paste for browsers without clipboard API.Copy/Paste now works also in Firefox.
 ### v2.7.1

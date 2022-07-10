@@ -28,7 +28,7 @@ export class EditorComponent implements OnInit, IEditor {
   @ViewChild(EditorDirective, { static: true }) editorContainer!: EditorDirective;
 
   ngOnInit() {
-    this.input.setValue(this.editorParams.data);
+    this.input.setValue(this.editorParams.value);
     const viewContainerRef = this.editorContainer.viewContainerRef;
     viewContainerRef.clear();
 

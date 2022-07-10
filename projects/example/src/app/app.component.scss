@@ -8,3 +8,21 @@
     border: none;
   }
 }
+
+.menu-button {
+  padding: 9px 24px;
+  background-color: rgb(99, 75, 227);
+  color: white;
+  border: none;
+  margin: 10px 5px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &.selected-page {
+    background-color: darken(rgb(99, 75, 227), 20);
+  }
+}
+
+.page-wrapper {
+  padding: 5px 20px;
+}

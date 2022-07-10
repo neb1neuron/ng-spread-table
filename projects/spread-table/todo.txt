@@ -5,6 +5,10 @@ To do list:
 - add ability to add items in context menu and output event(separator also added)
 - get data
 
+10/07/2022
+- select whole row on row index click
+- sortable column
+
 *
 - add column
 - rename column

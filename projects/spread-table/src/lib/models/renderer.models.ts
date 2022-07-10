@@ -10,7 +10,6 @@ export interface IRenderer {
 
 export interface IRendererParams {
   rendererComponent: Type<any>;
-  data: any;
   value: any;
   [otherProperty: string | number | symbol]: any;
 }

@@ -12,17 +12,22 @@ import { SpreadTableModule } from 'spread-table';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { CustomModalComponent } from './custom-modal/custom-modal.component';
 import { MatInputModule } from '@angular/material/input';
-import { StDropdownEditorComponent } from './st-dropdown-editor/st-dropdown-editor.component';
-import { StCustomRendererComponent } from './st-custom-renderer/st-custom-renderer.component';
+import { StDropdownEditorComponent } from './shared/st-dropdown-editor/st-dropdown-editor.component';
+import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
+import { StCustomRendererComponent } from './shared/st-custom-renderer/st-custom-renderer.component';
+import { DemoComponent } from './demo/demo.component';
+import { DocumentationComponent } from './documentation/documentation.component';
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [
     AppComponent,
     CustomModalComponent,
     StDropdownEditorComponent,
-    StCustomRendererComponent
+    StCustomRendererComponent,
+    DemoComponent,
+    DocumentationComponent
   ],
   imports: [
     BrowserModule,
@@ -36,9 +41,21 @@ import { StCustomRendererComponent } from './st-custom-renderer/st-custom-render
     HttpClientModule,
     MatDialogModule,
     MatButtonModule,
-    MatInputModule
+    MatInputModule,
+    HighlightModule
   ],
-  providers: [],
+  providers: [{
+    provide: HIGHLIGHT_OPTIONS,
+    useValue: {
+      coreLibraryLoader: () => import('highlight.js/lib/core'),
+      languages: {
+        typescript: () => import('highlight.js/lib/languages/typescript'),
+        css: () => import('highlight.js/lib/languages/css'),
+        xml: () => import('highlight.js/lib/languages/xml')
+      },
+      themePath: 'assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
+    }
+  }],
   bootstrap: [
     AppComponent
   ]

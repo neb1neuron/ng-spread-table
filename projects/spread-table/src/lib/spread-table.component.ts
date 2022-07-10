@@ -333,7 +333,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.form.addControl(column.name, new FormControl(this.getCellValue(this.data[cell.rowIndex], column.name), column.validators));
     });
 
-    this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName));
+    this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName)!);
     this.startRowIndex = cell.rowIndex;
 
     if (this.focus) {
@@ -391,7 +391,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
-            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates.columnName));
+            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates!.columnName)!);
             if (columnIndex - 1 >= 0) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.columns[columnIndex - 1].name);
@@ -406,7 +406,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
-            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates.columnName));
+            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates!.columnName)!);
             if (columnIndex + 1 < this.columns.length) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.columns[columnIndex + 1].name);
@@ -421,7 +421,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           if (this.selectedCellCoordinates) {
             let currentCell = this.getDataCell(this.selectedCellCoordinates.rowIndex, this.selectedCellCoordinates.columnName);
             let nextCell: Cell | null = null;
-            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates.columnName));
+            const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === this.selectedCellCoordinates!.columnName)!);
             if (this.selectedCellCoordinates.rowIndex > 0) {
               if (currentCell) currentCell.selected = false;
               nextCell = this.getDataCell(this.selectedCellCoordinates.rowIndex - 1, this.columns[columnIndex].name);
@@ -642,7 +642,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     if (selectedCells.length === 0) return;
 
     const rowIndexDifference = selectedCells[0].rowIndex;
-    const columnIndexDifference = this.columns.indexOf(this.columns.find(c => c.name === selectedCells[0].columnName));
+    const columnIndexDifference = this.columns.indexOf(this.columns.find(c => c.name === selectedCells[0].columnName)!);
     this.clearSelection();
     let changes: Change[] = [];
 
@@ -653,14 +653,14 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
 
       }
       for (let j = 0; j < copyData[i].length; j++) {
-        const selectedCell = selectedCells.find(c => c.rowIndex === i + rowIndexDifference && this.columns.indexOf(this.columns.find(col => col.name === c.columnName)) === j + columnIndexDifference);
+        const selectedCell = selectedCells.find(c => c.rowIndex === i + rowIndexDifference && this.columns.indexOf(this.columns.find(col => col.name === c.columnName)!) === j + columnIndexDifference);
 
-        const cell = selectedRow?.cells.find(c => this.columns.indexOf(this.columns.find(col => col.name === c.columnName)) === j + columnIndexDifference);
-        if (!cell || !this.columns.find(col => col.name === cell.columnName).editable) continue;
+        const cell = selectedRow?.cells.find(c => this.columns.indexOf(this.columns.find(col => col.name === c.columnName)!) === j + columnIndexDifference);
+        if (!cell || !this.columns.find(col => col.name === cell.columnName)!.editable) continue;
         cell.selected = false;
 
         const cellRowIndex = cell.rowIndex;
-        const cellColumnIndex = this.columns.indexOf(this.columns.find(col => col.name === cell.columnName));
+        const cellColumnIndex = this.columns.indexOf(this.columns.find(col => col.name === cell.columnName)!);
 
         if (selectedCells.length > 1) {
           if (!selectedCell) continue;
@@ -693,7 +693,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       this.form.get(column.name)?.setValue(value);
     }
 
-    const cell = row.cells.find(c => c.columnName === column.name);
+    const cell = row.cells.find(c => c.columnName === column.name)!;
 
     if (cell.value !== this.form.value[column.name]) {
       const changes = [{
@@ -758,7 +758,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     } else {
       cell.selected = true;
 
-      this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName));;
+      this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName)!);
       this.startRowIndex = cell.rowIndex;
     }
 
@@ -768,7 +768,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   selectTo(rowIndex: number, columnName: string) {
     let rowStart, rowEnd, cellStart, cellEnd;
 
-    const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === columnName));
+    const columnIndex = this.columns.indexOf(this.columns.find(c => c.name === columnName)!);
 
     if (rowIndex < this.startRowIndex) {
       rowStart = rowIndex;
@@ -816,11 +816,11 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       return false;
     }
 
-    this.editableContextMenu = this.columns.find(col => col.name === cell.columnName).editable || false;
+    this.editableContextMenu = this.columns.find(col => col.name === cell.columnName)!.editable || false;
     this.isDisplayContextMenu = true;
     this.isDisplayColumnMenu = false;
 
-    this.createContextMenuItems(this.columns.find(col => col.name === cell.columnName));
+    this.createContextMenuItems(this.columns.find(col => col.name === cell.columnName)!);
 
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     return true;
@@ -903,7 +903,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   private setCellValueAndValidate(cell: Cell, value: any) {
     cell.value = value;
     cell.selected = true;
-    this.formControl = new FormControl(value, this.columns.find(col => col.name === cell.columnName).validators);
+    this.formControl = new FormControl(value, this.columns.find(col => col.name === cell.columnName)!.validators);
     const controlErrors = this.formControl.errors;
     let cellErrors: string[] = [];
     if (controlErrors) {
@@ -940,13 +940,13 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   }
 
   resize = (event) => {
-    if (this.columnBeingResized) {
-      const { left } = this.htmlColumnBeingResized?.getBoundingClientRect() || 0;
+    if (this.columnBeingResized && this.htmlColumnBeingResized) {
+      const { left } = this.htmlColumnBeingResized.getBoundingClientRect() || 0;
       this.columnBeingResized.minWidth = Math.max(event.pageX - left, this.minColumnWidth);
-      const headerWidth = document.querySelector('#widthReference').clientWidth - 0.1;
+      const headerWidth = document.querySelector('#widthReference')!.clientWidth - 0.1;
       const columnsWidthSum = this.columns.map(c => { return c.minWidth || this.minColumnWidth }).reduce((a, b) => a + b, 0) + this.indexWidth + 10;
-      document.querySelector('cdk-virtual-scroll-viewport')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
-      document.getElementById('spread-table-header')['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+      document.querySelector('cdk-virtual-scroll-viewport')!['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
+      document.getElementById('spread-table-header')!['style'].width = Math.max(columnsWidthSum, headerWidth) + 'px';
     }
   }
 

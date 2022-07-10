@@ -1,0 +1,40 @@
+<div>This is <b>Spread Table</b>, a customizable Angular table that tends to look and feel like a basic spreadsheet.
+</div>
+<br>
+<button class="m-2 btn btn-danger"
+        (click)="getSpreadTable()">Get spread table</button>
+<button class="m-2 btn btn-success"
+        (click)="getSelectedCells()">Selected Cells</button>
+<button class="m-2 btn btn-primary"
+        (click)="getGridData()">Get Data</button>
+<a style="width: 124px;
+    height: 32px;
+    background: url(https://raw.githubusercontent.com/neb1neuron/ng-spread-table/master/buy-me-a-beer.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;"
+   href="https://www.paypal.com/paypalme/CFeder/5"
+   class="btn"></a>
+
+<div class="p-3 w-100"
+     style="height: 700px;">
+  <spread-table *ngIf="data"
+                #spreadTable
+                [columns]="columns"
+                [minColumnWidth]="100"
+                [rowHeight]="36"
+                [indexWidth]="60"
+                [rawData]="data"
+                [undoRedoStackSize]="20"
+                [extraContextMenuItems]="extraContextMenuItems"
+                [extraColumnMenuItems]="extraColumnMenuItems"
+                (cellValueChange)="onCellValueChange($event)"
+                (contextMenuEvent)="onContextMenuEvent($event)"
+                (columnMenuEvent)="onColumnMenuEvent($event)">
+
+  </spread-table>
+</div>
+<h3 class="result"
+    [innerHtml]="event"></h3>
+<pre class="result"
+     [innerHtml]="result"></pre>

@@ -73,7 +73,7 @@
               </app-renderer>
               <app-editor *ngIf="isInEditMode(row.cells[j])"
                           style="height: 100%"
-                          [editorParams]="{editorComponent:column.editorComponent ,data: this.form.value[column.name], column:column}"
+                          [editorParams]="{editorComponent:column.editorComponent ,value: this.form.value[column.name], column:column}"
                           (setValue)="setCellValue(row,columns[j],$event)">
               </app-editor>
               <span *ngIf="row.cells[j].errors"
