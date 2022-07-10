@@ -14,9 +14,9 @@ export class Change {
 })
 export class UndoRedoService {
 
-  private _changesForUndo: [Change[]] = [[]];
-  private _changesForRedo: [Change[]] = [[]];
-  private _changesCopy: [Change[]] = [[]];
+  public _changesForUndo: Change[][] = [];
+  private _changesForRedo: Change[][] = [];
+  private _changesCopy: Change[][] = [];
   private stackSize = 20;
 
   constructor() { }
@@ -27,6 +27,9 @@ export class UndoRedoService {
 
   setChange(change: Change[]) {
     this._changesForUndo.push(change);
+    if (this._changesForUndo.length > this.stackSize) {
+      this._changesForUndo.shift();
+    }
   }
 
   setCopyData(change: Change[]) {
@@ -45,7 +48,7 @@ export class UndoRedoService {
         redoChange.push(new Change({ coordinates: change.coordinates, afterValue: change.beforeValue, beforeValue: change.afterValue }))
       });
       this._changesForRedo.push(redoChange);
-      if (this._changesForRedo.length === this.stackSize) {
+      if (this._changesForRedo.length > this.stackSize) {
         this._changesForRedo.shift();
       }
     }
@@ -60,7 +63,7 @@ export class UndoRedoService {
         undoChange.push(new Change({ coordinates: change.coordinates, afterValue: change.beforeValue, beforeValue: change.afterValue }))
       });
       this._changesForUndo.push(undoChange);
-      if (this._changesForUndo.length === this.stackSize) {
+      if (this._changesForUndo.length > this.stackSize) {
         this._changesForUndo.shift();
       }
     }

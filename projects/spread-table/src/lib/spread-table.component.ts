@@ -16,6 +16,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   @Input() minColumnWidth = 100;
   @Input() rowHeight = 24;
   @Input() indexWidth = 60;
+  @Input() undoRedoStackSize = 10;
   @Input() rawData: any = null;
   @Input() headerBgColor = '#634be3';
   @Input() headerColor = '#efefef';
@@ -190,8 +191,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     }
   }
 
-  constructor(private undoRedoService: UndoRedoService) {
-  }
+  constructor(public undoRedoService: UndoRedoService) { }
 
   public getSelectedCells(): Cell[] {
     let selectedCells: Cell[] = [];
@@ -210,7 +210,9 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    changes
+    if (changes?.undoRedoStackSize?.currentValue) {
+      this.undoRedoService.setStackSize(this.undoRedoStackSize);
+    }
     let data: Row[] = [];
     if (this.firstLoad && this.rawData?.length && this.columns?.length) {
       this.firstLoad = false;

@@ -125,10 +125,13 @@ export class AppComponent {
 
       if (!result) return;
 
+      // define the new column
       const newColumn = new Column({ name: result, displayName: result, editable: true, resizable: true, minWidth: 200, });
+      // add the new column to the columns array
       this.columns.splice(this.columns.indexOf(event.column!) + 1, 0, newColumn);
       this.columns = [...this.columns];
 
+      // add cells in the data array for the new column
       this.gridInstance.data.forEach((row: Row) => {
         row.cells.splice(this.columns.indexOf(newColumn), 0, new Cell({ columnName: newColumn.name, value: '', originalValue: '', rowIndex: row.rowIndex }));
       });
@@ -144,6 +147,14 @@ export class AppComponent {
       this.columns.splice(this.columns.indexOf(event.column!), 1);
       this.columns = [...this.columns];
 
+      // if there were changes in the undo stack on this column remove them
+      this.gridInstance.undoRedoService._changesForUndo.forEach((changes: Change[]) => {
+        changes.forEach((change: Change) => {
+          if (change.coordinates.columnName === event.column!.name)
+            changes.splice(changes.indexOf(change), 1);
+        });
+      });
+
       this.gridInstance.setColumnsWidth();
     }
 
@@ -152,16 +163,27 @@ export class AppComponent {
 
       if (!result) return;
 
-      this.data.forEach((element: any) => {
-        element[result] = element[event.column!.name];
-        delete element[event.column!.name];
+      // change cells column name value to the renamed column name
+      this.gridInstance.data.forEach((row: Row) => {
+        let cell = row.cells.find((cell: Cell) => cell.columnName === event.column!.name);
+        cell!.columnName = result;
       });
 
-      this.data = [...this.data];
+      // if there were changes in the undo stack on this column set them to the new column name
+      this.gridInstance.undoRedoService._changesForUndo.forEach((changes: Change[]) => {
+        changes.forEach((change: Change) => {
+          if (change.coordinates.columnName === event.column!.name)
+            change.coordinates.columnName = result;
+        });
+      });
+
+      // rename column in the columns array
       const columnIndex = this.columns.indexOf(event.column!);
       this.columns[columnIndex].displayName = result;
       this.columns[columnIndex].name = result;
       this.columns = [...this.columns];
+
+      this.gridInstance.setColumnsWidth();
     }
   }
 
