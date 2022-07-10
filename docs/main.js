@@ -152,7 +152,7 @@ AppModule.ɵinj = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵ
             provide: ngx_highlightjs__WEBPACK_IMPORTED_MODULE_8__.HIGHLIGHT_OPTIONS,
             useValue: {
                 fullLibraryLoader: () => __webpack_require__.e(/*! import() */ "assets/highlight").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js */ 7722)),
-                themePath: '/ng-spread-table/assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
+                themePath: 'assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
             }
         }], imports: [[
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_9__.BrowserModule,
