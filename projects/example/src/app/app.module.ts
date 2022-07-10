@@ -47,7 +47,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
   providers: [{
     provide: HIGHLIGHT_OPTIONS,
     useValue: {
-      coreLibraryLoader: () => import('highlight.js/lib/core'),
+      coreLibraryLoader: () => import('/ng-spread-table/highlight.js/lib/core'),
       languages: {
         typescript: () => import('/ng-spread-table/highlight.js/lib/languages/typescript'),
         css: () => import('/ng-spread-table/highlight.js/lib/languages/css'),
