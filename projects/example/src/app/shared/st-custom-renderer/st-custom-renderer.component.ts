@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IRendererComponent, IRendererParams } from 'test-packages/spread-table/lib/models/renderer.models';
+import { IRendererComponent, IRendererParams } from 'spread-table';
 
 @Component({
   selector: 'app-st-custom-renderer',

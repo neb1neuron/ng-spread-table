@@ -1,15 +1,17 @@
-import { EventEmitter, Type } from "@angular/core";
+import { Type } from "@angular/core";
 
-export interface IRendererComponent {
+interface IRendererComponent {
   stInit(params: IRendererParams);
 }
 
-export interface IRenderer {
+interface IRenderer {
   rendererParams: IRendererParams;
 }
 
-export interface IRendererParams {
+interface IRendererParams {
   rendererComponent: Type<any>;
   value: any;
   [otherProperty: string | number | symbol]: any;
 }
+
+export { IRendererComponent, IRenderer, IRendererParams };

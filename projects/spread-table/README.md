@@ -233,6 +233,8 @@ Note: This plugin is till work in progress
 ```
 
 ## Versions
+### v3.3.0
+-  fix copy/paste in Firefox
 ### v3.0.0
 
 - update to Angular 13.3.11

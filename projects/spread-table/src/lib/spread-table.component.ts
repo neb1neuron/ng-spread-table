@@ -34,6 +34,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   focus = true;
   form = new FormGroup({});
   formControl = new FormControl();
+  selectedRowIndex = -1;
 
   isMouseDown = false;
   startRowIndex = 0;
@@ -720,6 +721,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   }
 
   clearSelection() {
+    this.selectedRowIndex = -1;
     this.isEditMode = false;
     this.selectedCellCoordinates = undefined;
 
@@ -961,5 +963,13 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
       c.minWidth = this.originalColumnsWidth[c.name];
     });
     this.setColumnsWidth();
+  }
+
+  selectRow(row: Row) {
+    this.clearSelection();
+    row.cells.forEach(cell => {
+      cell.selected = true;
+    });
+    this.selectedRowIndex = row.rowIndex;
   }
 }

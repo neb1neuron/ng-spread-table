@@ -40,16 +40,18 @@
          *ngIf="data?.length"
          tabindex="-1"
          class="spread-table"
-         contenteditable="false"
+         contenteditable="true"
          id="spreadTable">
       <div contenteditable="false"
            class="spread-tbody">
         <div class="spread-row"
              *cdkVirtualFor="let row of data;let i = index">
-          <div class="spread-cell"
+          <div class="spread-cell not-editable"
                [style.height]="rowHeight+'px'"
                [style.width]="indexWidth + 'px'"
-               [style.flex-grow]="0"><span>{{row.rowIndex}}</span></div>
+               [style.flex-grow]="0"
+               [ngClass]="selectedRowIndex === row.rowIndex  ? 'selected' : ''"
+               (click)="selectRow(row)"><span>{{row.rowIndex}}</span></div>
           <div #spreadCell
                class="spread-cell"
                [style.height]="rowHeight+'px'"

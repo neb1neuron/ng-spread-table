@@ -91832,7 +91832,16 @@ function SpreadTableComponent_div_11_div_3_div_4_Template(rf, ctx) {
 
 function SpreadTableComponent_div_11_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 20)(1, "div", 21)(2, "span");
+    const _r44 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 20)(1, "div", 21);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function SpreadTableComponent_div_11_div_3_Template_div_click_1_listener() {
+      const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r44);
+      const row_r15 = restoredCtx.$implicit;
+      const ctx_r43 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+      return ctx_r43.selectRow(row_r15);
+    });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "span");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]()();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](4, SpreadTableComponent_div_11_div_3_div_4_Template, 6, 14, "div", 22);
@@ -91844,6 +91853,7 @@ function SpreadTableComponent_div_11_div_3_Template(rf, ctx) {
     const ctx_r14 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstyleProp"]("height", ctx_r14.rowHeight + "px")("width", ctx_r14.indexWidth + "px")("flex-grow", 0);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", ctx_r14.selectedRowIndex === row_r15.rowIndex ? "selected" : "");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](row_r15.rowIndex);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
@@ -91854,7 +91864,7 @@ function SpreadTableComponent_div_11_div_3_Template(rf, ctx) {
 function SpreadTableComponent_div_11_Template(rf, ctx) {
   if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 16, 17)(2, "div", 18);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, SpreadTableComponent_div_11_div_3_Template, 5, 8, "div", 19);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, SpreadTableComponent_div_11_div_3_Template, 5, 9, "div", 19);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]()();
   }
 
@@ -91867,13 +91877,13 @@ function SpreadTableComponent_div_11_Template(rf, ctx) {
 
 function SpreadTableComponent_app_context_menu_12_Template(rf, ctx) {
   if (rf & 1) {
-    const _r45 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    const _r47 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "app-context-menu", 32, 33);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("onContextMenuItemClick", function SpreadTableComponent_app_context_menu_12_Template_app_context_menu_onContextMenuItemClick_0_listener($event) {
-      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r45);
-      const ctx_r44 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-      return ctx_r44.handleMenuItemClick($event);
+      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r47);
+      const ctx_r46 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+      return ctx_r46.handleMenuItemClick($event);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
   }
@@ -91886,13 +91896,13 @@ function SpreadTableComponent_app_context_menu_12_Template(rf, ctx) {
 
 function SpreadTableComponent_app_context_menu_13_Template(rf, ctx) {
   if (rf & 1) {
-    const _r48 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    const _r50 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
 
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "app-context-menu", 32, 34);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("onContextMenuItemClick", function SpreadTableComponent_app_context_menu_13_Template_app_context_menu_onContextMenuItemClick_0_listener($event) {
-      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r48);
-      const ctx_r47 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-      return ctx_r47.handleColumnMenuItemClick($event);
+      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r50);
+      const ctx_r49 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+      return ctx_r49.handleColumnMenuItemClick($event);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
   }
@@ -92188,7 +92198,7 @@ RendererComponent.ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_
     type: _angular_core__WEBPACK_IMPORTED_MODULE_0__.Component,
     args: [{
       selector: 'app-renderer',
-      template: "<ng-template renderer></ng-template>\n",
+      template: "<ng-template renderer></ng-template>\r\n",
       styles: [""]
     }]
   }], function () {
@@ -92261,7 +92271,7 @@ DefaultEditorComponent.ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MO
     type: _angular_core__WEBPACK_IMPORTED_MODULE_0__.Component,
     args: [{
       selector: 'app-default-editor',
-      template: "<input class=\"cell-in-edit w-100\"\n       (keydown)=\"onKeyDown($event)\"\n       (blur)=\"setValue.emit(params.input.value)\"\n       [formControl]=\"params.input\" />\n",
+      template: "<input class=\"cell-in-edit w-100\"\r\n       (keydown)=\"onKeyDown($event)\"\r\n       (blur)=\"setValue.emit(params.input.value)\"\r\n       [formControl]=\"params.input\" />\r\n",
       styles: [""]
     }]
   }], function () {
@@ -92365,7 +92375,7 @@ EditorComponent.ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0_
     type: _angular_core__WEBPACK_IMPORTED_MODULE_0__.Component,
     args: [{
       selector: 'app-editor',
-      template: "<ng-template editor\n             (blur)=\"setValue.emit(params.input.value)\"></ng-template>\n",
+      template: "<ng-template editor\r\n             (blur)=\"setValue.emit(params.input.value)\"></ng-template>\r\n",
       styles: [""]
     }]
   }], function () {
@@ -92475,6 +92485,7 @@ class SpreadTableComponent {
     this.focus = true;
     this.form = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__.FormGroup({});
     this.formControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__.FormControl();
+    this.selectedRowIndex = -1;
     this.isMouseDown = false;
     this.startRowIndex = 0;
     this.startCellIndex = 0;
@@ -93233,6 +93244,7 @@ class SpreadTableComponent {
   }
 
   clearSelection() {
+    this.selectedRowIndex = -1;
     this.isEditMode = false;
     this.selectedCellCoordinates = undefined;
     let selectedCells = this.data.filter(r => r.cells.filter(d => d.selected).length > 0).flatMap(r => r.cells.filter(c => c.selected));
@@ -93486,6 +93498,14 @@ class SpreadTableComponent {
     this.setColumnsWidth();
   }
 
+  selectRow(row) {
+    this.clearSelection();
+    row.cells.forEach(cell => {
+      cell.selected = true;
+    });
+    this.selectedRowIndex = row.rowIndex;
+  }
+
 }
 
 SpreadTableComponent.ɵfac = function SpreadTableComponent_Factory(t) {
@@ -93528,7 +93548,7 @@ SpreadTableComponent.ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODU
   features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]],
   decls: 14,
   vars: 14,
-  consts: [[1, "wrapper", 3, "formGroup"], ["spreadWrapper", ""], ["id", "widthReference"], ["id", "spread-table-header", "tabindex", "-1", 1, ""], [1, "spread-thead", "w-100", 3, "mousedown"], [1, "columnHeader"], [1, "", 2, "color", "inherit"], [4, "ngFor", "ngForOf"], [3, "itemSize"], ["tabindex", "-1", "class", "spread-table", "contenteditable", "false", "id", "spreadTable", 4, "ngIf"], [3, "contextMenuItems", "onContextMenuItemClick", 4, "ngIf"], [1, "column-name"], [1, "column-menu", 3, "mousedown"], [1, "fas", "fa-bars"], ["class", "column-sizer", 3, "background", "mousedown", "dblclick", 4, "ngIf"], [1, "column-sizer", 3, "mousedown", "dblclick"], ["tabindex", "-1", "contenteditable", "false", "id", "spreadTable", 1, "spread-table"], ["spreadTable", ""], ["contenteditable", "false", 1, "spread-tbody"], ["class", "spread-row", 4, "cdkVirtualFor", "cdkVirtualForOf"], [1, "spread-row"], [1, "spread-cell"], ["class", "spread-cell", 3, "height", "width", "ngClass", "contextmenu", "dblclick", "mousedown", "mouseover", 4, "ngFor", "ngForOf"], [1, "spread-cell", 3, "ngClass", "contextmenu", "dblclick", "mousedown", "mouseover"], ["spreadCell", ""], [1, "error", "spread-table-tooltip", 2, "height", "100%"], ["style", "height: 100%", 3, "width", "rendererParams", 4, "ngIf"], ["style", "height: 100%", 3, "editorParams", "setValue", 4, "ngIf"], ["class", "validation-errors spread-table-tooltiptext spread-table-tooltip-bottom", 3, "innerHtml", 4, "ngIf"], [2, "height", "100%", 3, "rendererParams"], [2, "height", "100%", 3, "editorParams", "setValue"], [1, "validation-errors", "spread-table-tooltiptext", "spread-table-tooltip-bottom", 3, "innerHtml"], [3, "contextMenuItems", "onContextMenuItemClick"], ["contextMenu", ""], ["columnMenu", ""]],
+  consts: [[1, "wrapper", 3, "formGroup"], ["spreadWrapper", ""], ["id", "widthReference"], ["id", "spread-table-header", "tabindex", "-1", 1, ""], [1, "spread-thead", "w-100", 3, "mousedown"], [1, "columnHeader"], [1, "", 2, "color", "inherit"], [4, "ngFor", "ngForOf"], [3, "itemSize"], ["tabindex", "-1", "class", "spread-table", "contenteditable", "true", "id", "spreadTable", 4, "ngIf"], [3, "contextMenuItems", "onContextMenuItemClick", 4, "ngIf"], [1, "column-name"], [1, "column-menu", 3, "mousedown"], [1, "fas", "fa-bars"], ["class", "column-sizer", 3, "background", "mousedown", "dblclick", 4, "ngIf"], [1, "column-sizer", 3, "mousedown", "dblclick"], ["tabindex", "-1", "contenteditable", "true", "id", "spreadTable", 1, "spread-table"], ["spreadTable", ""], ["contenteditable", "false", 1, "spread-tbody"], ["class", "spread-row", 4, "cdkVirtualFor", "cdkVirtualForOf"], [1, "spread-row"], [1, "spread-cell", "not-editable", 3, "ngClass", "click"], ["class", "spread-cell", 3, "height", "width", "ngClass", "contextmenu", "dblclick", "mousedown", "mouseover", 4, "ngFor", "ngForOf"], [1, "spread-cell", 3, "ngClass", "contextmenu", "dblclick", "mousedown", "mouseover"], ["spreadCell", ""], [1, "error", "spread-table-tooltip", 2, "height", "100%"], ["style", "height: 100%", 3, "width", "rendererParams", 4, "ngIf"], ["style", "height: 100%", 3, "editorParams", "setValue", 4, "ngIf"], ["class", "validation-errors spread-table-tooltiptext spread-table-tooltip-bottom", 3, "innerHtml", 4, "ngIf"], [2, "height", "100%", 3, "rendererParams"], [2, "height", "100%", 3, "editorParams", "setValue"], [1, "validation-errors", "spread-table-tooltiptext", "spread-table-tooltip-bottom", 3, "innerHtml"], [3, "contextMenuItems", "onContextMenuItemClick"], ["contextMenu", ""], ["columnMenu", ""]],
   template: function SpreadTableComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0, 1);
@@ -93578,7 +93598,7 @@ SpreadTableComponent.ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODU
     type: _angular_core__WEBPACK_IMPORTED_MODULE_0__.Component,
     args: [{
       selector: 'spread-table',
-      template: "<div #spreadWrapper\r\n     class=\"wrapper\"\r\n     [formGroup]=\"form\">\r\n  <div id=\"widthReference\"></div>\r\n\r\n  <div id=\"spread-table-header\"\r\n       tabindex=\"-1\"\r\n       class=\"\">\r\n    <div class=\"spread-thead w-100\"\r\n         [style.background]=\"headerBgColor\"\r\n         [style.color]=\"headerColor\"\r\n         (mousedown)=\"isDisplayContextMenu = false;isDisplayColumnMenu = false;\">\r\n      <div class=\"columnHeader\"\r\n           [style.flex-grow]=\"0\"\r\n           [style.width]=\"indexWidth + 'px'\">\r\n        <div class=\"\"\r\n             style=\"color:inherit\">Index</div>\r\n      </div>\r\n      <ng-container *ngFor=\"let column of columns\">\r\n        <div class=\"columnHeader\"\r\n             [style.width]=\"(column.minWidth || minColumnWidth) + 'px'\">\r\n          <div class=\"column-name\">{{column.displayName}}</div>\r\n          <div class=\"column-menu\"\r\n               (mousedown)=\"openColumnMenu($event, column)\"><i class=\"fas fa-bars\"></i></div>\r\n          <div *ngIf=\"column.resizable\"\r\n               class=\"column-sizer\"\r\n               [style.background]=\"headerColor\"\r\n               (mousedown)=\"clickResizer($event, column)\"\r\n               (dblclick)=\"resetColumnWidths();\"></div>\r\n        </div>\r\n      </ng-container>\r\n      <div class=\"columnHeader\">\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <cdk-virtual-scroll-viewport [itemSize]=\"rowHeight\">\r\n\r\n    <div #spreadTable\r\n         *ngIf=\"data?.length\"\r\n         tabindex=\"-1\"\r\n         class=\"spread-table\"\r\n         contenteditable=\"false\"\r\n         id=\"spreadTable\">\r\n      <div contenteditable=\"false\"\r\n           class=\"spread-tbody\">\r\n        <div class=\"spread-row\"\r\n             *cdkVirtualFor=\"let row of data;let i = index\">\r\n          <div class=\"spread-cell\"\r\n               [style.height]=\"rowHeight+'px'\"\r\n               [style.width]=\"indexWidth + 'px'\"\r\n               [style.flex-grow]=\"0\"><span>{{row.rowIndex}}</span></div>\r\n          <div #spreadCell\r\n               class=\"spread-cell\"\r\n               [style.height]=\"rowHeight+'px'\"\r\n               [style.width]=\"column.minWidth + 'px'\"\r\n               (contextmenu)=\"openContextMenu($event,row.cells[j]);\"\r\n               (dblclick)=\"column.editable ? doubleClick(row.cells[j]) : ''\"\r\n               (mousedown)=\"cellClick($event,row.cells[j])\"\r\n               (mouseover)=\"mouseOverCall(row.cells[j])\"\r\n               [ngClass]=\"[isInEditMode(row.cells[j]) ? 'no-padding':'',\r\n            row.cells[j]?.selected  ? 'selected' : '',\r\n            row.cells[j]?.errors  ? 'has-errors' : '',\r\n            row.cells[j]?.value !==  row.cells[j]?.originalValue ? 'hasChanges' : '',\r\n            column.editable ? '' : 'not-editable']\"\r\n               *ngFor=\"let column of columns;let j = index\">\r\n            <div style=\"height: 100%;\"\r\n                 class=\"error spread-table-tooltip\">\r\n              <app-renderer *ngIf=\"!isInEditMode(row.cells[j])\"\r\n                            style=\"height: 100%\"\r\n                            [style.width]=\"column.minWidth - 16 + 'px'\"\r\n                            [rendererParams]=\"{rendererComponent:column.rendererComponent ,value: getCellValue(row,column.name), column:column }\">\r\n              </app-renderer>\r\n              <app-editor *ngIf=\"isInEditMode(row.cells[j])\"\r\n                          style=\"height: 100%\"\r\n                          [editorParams]=\"{editorComponent:column.editorComponent ,value: this.form.value[column.name], column:column}\"\r\n                          (setValue)=\"setCellValue(row,columns[j],$event)\">\r\n              </app-editor>\r\n              <span *ngIf=\"row.cells[j].errors\"\r\n                    class=\"validation-errors spread-table-tooltiptext spread-table-tooltip-bottom\"\r\n                    [innerHtml]=\"row.cells[j].errors\"></span>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </cdk-virtual-scroll-viewport>\r\n</div>\r\n<app-context-menu #contextMenu\r\n                  *ngIf=\"contextMenuItems.length > 0 && isDisplayContextMenu\"\r\n                  [contextMenuItems]=\"contextMenuItems\"\r\n                  (onContextMenuItemClick)=\"handleMenuItemClick($event)\"></app-context-menu>\r\n<app-context-menu #columnMenu\r\n                  *ngIf=\"columnMenuItems.length > 0 && isDisplayColumnMenu\"\r\n                  [contextMenuItems]=\"columnMenuItems\"\r\n                  (onContextMenuItemClick)=\"handleColumnMenuItemClick($event)\"></app-context-menu>\r\n",
+      template: "<div #spreadWrapper\r\n     class=\"wrapper\"\r\n     [formGroup]=\"form\">\r\n  <div id=\"widthReference\"></div>\r\n\r\n  <div id=\"spread-table-header\"\r\n       tabindex=\"-1\"\r\n       class=\"\">\r\n    <div class=\"spread-thead w-100\"\r\n         [style.background]=\"headerBgColor\"\r\n         [style.color]=\"headerColor\"\r\n         (mousedown)=\"isDisplayContextMenu = false;isDisplayColumnMenu = false;\">\r\n      <div class=\"columnHeader\"\r\n           [style.flex-grow]=\"0\"\r\n           [style.width]=\"indexWidth + 'px'\">\r\n        <div class=\"\"\r\n             style=\"color:inherit\">Index</div>\r\n      </div>\r\n      <ng-container *ngFor=\"let column of columns\">\r\n        <div class=\"columnHeader\"\r\n             [style.width]=\"(column.minWidth || minColumnWidth) + 'px'\">\r\n          <div class=\"column-name\">{{column.displayName}}</div>\r\n          <div class=\"column-menu\"\r\n               (mousedown)=\"openColumnMenu($event, column)\"><i class=\"fas fa-bars\"></i></div>\r\n          <div *ngIf=\"column.resizable\"\r\n               class=\"column-sizer\"\r\n               [style.background]=\"headerColor\"\r\n               (mousedown)=\"clickResizer($event, column)\"\r\n               (dblclick)=\"resetColumnWidths();\"></div>\r\n        </div>\r\n      </ng-container>\r\n      <div class=\"columnHeader\">\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <cdk-virtual-scroll-viewport [itemSize]=\"rowHeight\">\r\n\r\n    <div #spreadTable\r\n         *ngIf=\"data?.length\"\r\n         tabindex=\"-1\"\r\n         class=\"spread-table\"\r\n         contenteditable=\"true\"\r\n         id=\"spreadTable\">\r\n      <div contenteditable=\"false\"\r\n           class=\"spread-tbody\">\r\n        <div class=\"spread-row\"\r\n             *cdkVirtualFor=\"let row of data;let i = index\">\r\n          <div class=\"spread-cell not-editable\"\r\n               [style.height]=\"rowHeight+'px'\"\r\n               [style.width]=\"indexWidth + 'px'\"\r\n               [style.flex-grow]=\"0\"\r\n               [ngClass]=\"selectedRowIndex === row.rowIndex  ? 'selected' : ''\"\r\n               (click)=\"selectRow(row)\"><span>{{row.rowIndex}}</span></div>\r\n          <div #spreadCell\r\n               class=\"spread-cell\"\r\n               [style.height]=\"rowHeight+'px'\"\r\n               [style.width]=\"column.minWidth + 'px'\"\r\n               (contextmenu)=\"openContextMenu($event,row.cells[j]);\"\r\n               (dblclick)=\"column.editable ? doubleClick(row.cells[j]) : ''\"\r\n               (mousedown)=\"cellClick($event,row.cells[j])\"\r\n               (mouseover)=\"mouseOverCall(row.cells[j])\"\r\n               [ngClass]=\"[isInEditMode(row.cells[j]) ? 'no-padding':'',\r\n            row.cells[j]?.selected  ? 'selected' : '',\r\n            row.cells[j]?.errors  ? 'has-errors' : '',\r\n            row.cells[j]?.value !==  row.cells[j]?.originalValue ? 'hasChanges' : '',\r\n            column.editable ? '' : 'not-editable']\"\r\n               *ngFor=\"let column of columns;let j = index\">\r\n            <div style=\"height: 100%;\"\r\n                 class=\"error spread-table-tooltip\">\r\n              <app-renderer *ngIf=\"!isInEditMode(row.cells[j])\"\r\n                            style=\"height: 100%\"\r\n                            [style.width]=\"column.minWidth - 16 + 'px'\"\r\n                            [rendererParams]=\"{rendererComponent:column.rendererComponent ,value: getCellValue(row,column.name), column:column }\">\r\n              </app-renderer>\r\n              <app-editor *ngIf=\"isInEditMode(row.cells[j])\"\r\n                          style=\"height: 100%\"\r\n                          [editorParams]=\"{editorComponent:column.editorComponent ,value: this.form.value[column.name], column:column}\"\r\n                          (setValue)=\"setCellValue(row,columns[j],$event)\">\r\n              </app-editor>\r\n              <span *ngIf=\"row.cells[j].errors\"\r\n                    class=\"validation-errors spread-table-tooltiptext spread-table-tooltip-bottom\"\r\n                    [innerHtml]=\"row.cells[j].errors\"></span>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </cdk-virtual-scroll-viewport>\r\n</div>\r\n<app-context-menu #contextMenu\r\n                  *ngIf=\"contextMenuItems.length > 0 && isDisplayContextMenu\"\r\n                  [contextMenuItems]=\"contextMenuItems\"\r\n                  (onContextMenuItemClick)=\"handleMenuItemClick($event)\"></app-context-menu>\r\n<app-context-menu #columnMenu\r\n                  *ngIf=\"columnMenuItems.length > 0 && isDisplayColumnMenu\"\r\n                  [contextMenuItems]=\"columnMenuItems\"\r\n                  (onContextMenuItemClick)=\"handleColumnMenuItemClick($event)\"></app-context-menu>\r\n",
       styles: ["::ng-deep .w-100{width:100%}::ng-deep ::-webkit-scrollbar{width:11px;height:11px}::ng-deep ::-webkit-scrollbar-thumb{height:6px;border:2px solid rgba(0,0,0,0);background-clip:padding-box;border-radius:10px;background-color:#0006;box-shadow:inset -1px -1px #0000000d,inset 1px 1px #0000000d}::ng-deep ::-webkit-scrollbar-button{width:0;height:0;display:none}::ng-deep ::-webkit-scrollbar-corner{background-color:transparent}@keyframes hover-icon-pop{50%{transform:scale(1.3)}}::ng-deep .hover-icon-pop{vertical-align:middle;transform:perspective(1px) translateZ(0);box-shadow:0 0 1px #0000;transition-duration:.3s}::ng-deep .hover-icon-pop i{transform:translateZ(0);transition-duration:.3s;transition-property:transform;transition-timing-function:ease-out}::ng-deep .hover-icon-pop:hover i,::ng-deep .hover-icon-pop:focus i,::ng-deep .hover-icon-pop:active i{animation-name:hover-icon-pop;animation-duration:.3s;animation-timing-function:linear;animation-iteration-count:1}::ng-deep spread-table *:not(i){padding:0;margin:0;box-sizing:border-box;font-family:Poppins,-apple-system,BlinkMacSystemFont,Segoe UI,Poppins,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",Segoe UI Symbol,\"Noto Color Emoji\"!important;color:#272b2d;font-size:.8rem}.wrapper{width:100%;height:100%;overflow:auto}cdk-virtual-scroll-viewport{width:100%;min-height:300px;overflow-x:hidden;height:calc(100% - 50px)}.hideextra{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.spread-table{border-collapse:separate;border-spacing:0;width:100%;height:100%;outline:none;padding-right:1px;cursor:default}.spread-table th:first-child,.spread-table td:first-child{border-left:1px solid #dde2eb}.spread-table.header{width:calc(100% - 1.2px)}.spread-table .spread-cell{height:24px;padding:3px 8px;-webkit-user-select:none;user-select:none;word-wrap:break-word;background-color:#fff;transition:background-color .1s ease-in;line-height:24px;text-align:left}.spread-table .spread-cell.not-editable{background-color:#eee}.spread-table .spread-cell.not-editable .spread-cell-value{color:gray}.spread-table .spread-cell.not-editable.selected{background-color:#ddd;transition:background-color .1s ease-in}.spread-table .spread-cell.no-padding{padding:3px;box-shadow:0 1px 4px 1px #00000013}.spread-table .spread-cell.hasChanges{background-color:#fff89b;transition:background-color .1s ease-in}.spread-table .spread-cell.selected{background-color:#dbf2ff;transition:background-color .1s ease-in}.spread-table .spread-cell.selected.hasChanges{background-color:#e8f5bd;transition:background-color .1s ease-in}.spread-table .spread-cell.has-errors{border:1px solid #e77681;border-radius:2px}.spread-table .spread-cell ::ng-deep .cell-in-edit{height:100%;outline:none;border:none}.spread-table .spread-cell ::ng-deep .cell-in-edit:focus{outline:none;border:none}.spread-table .spread-table-tooltip{position:relative;color:#006080;display:grid;align-items:center;width:100%}.spread-table .spread-table-tooltip .spread-table-tooltiptext{visibility:hidden;position:absolute;background-color:#555;color:#fff;padding:5px;border-radius:6px;z-index:1;opacity:0;transition:opacity .6s;font-size:.7rem}.spread-table .error.spread-table-tooltip .spread-table-tooltiptext{background-color:#dc3545}.spread-table .spread-table-tooltip:hover .spread-table-tooltiptext{visibility:visible;opacity:1}.spread-table .spread-table-tooltip .spread-table-tooltiptext2{visibility:hidden;position:absolute;width:120px;background-color:#555;color:#fff;text-align:center;padding:5px 0;border-radius:6px;z-index:1}.spread-table .spread-table-tooltip:hover .spread-table-tooltiptext2{visibility:visible}.spread-table .spread-table-tooltip-bottom{top:135%;left:50%;margin-left:-60px}.spread-table .spread-table-tooltip-bottom2{top:125%;left:50%;margin-left:-60px}.spread-table .spread-table-tooltip-bottom:after{content:\"\";position:absolute;bottom:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:transparent transparent #555 transparent}.spread-table .validation-errors.spread-table-tooltip-bottom:after{border-color:transparent transparent #dc3545 transparent}.spread-table .spread-table-tooltip .spread-table-tooltiptext-bottomarrow{visibility:hidden;width:120px;background-color:#111;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1;bottom:130%;left:50%;margin-left:-60px}.spread-table .spread-table-tooltip .spread-table-tooltiptext-bottomarrow:after{content:\"\";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:black transparent transparent transparent}.spread-table .spread-table-tooltip:hover .spread-table-tooltiptext-bottomarrow{visibility:visible}.spread-tbody tr:nth-child(even){background-color:#fcfcfc}.spread-thead{z-index:99;position:relative;font-weight:600;display:inline-flex}.spread-thead .columnHeader{background:inherit;color:inherit;height:46px;padding:3px 8px;text-align:left;cursor:default;align-items:center;-webkit-user-select:none;user-select:none;display:flex;justify-content:flex-end}.spread-thead .columnHeader .column-menu{padding:3px 8px;color:inherit}.spread-thead .columnHeader .column-sizer{width:5px;cursor:col-resize;border-radius:5px;height:70%;position:relative;margin-right:-9px;display:block;border-right:1px solid #00000078}.spread-thead .columnHeader .column-sizer:hover{background:#ffffff;border-right:1px solid black}.spread-thead .columnHeader .column-name{flex:1;white-space:nowrap;background:inherit;color:inherit}.spread-thead .columnHeader:last-of-type{flex-shrink:0;flex-grow:0;flex-basis:10px;padding:0;border:0}.spread-row{z-index:98;display:inline-flex;width:100%}.spread-row .spread-cell:last-of-type{border-right:1px solid #dde2eb}.spread-cell{border-bottom:1px solid #dde2eb;border-top:none;border-left:1px solid #dde2eb;height:36px;padding:3px 8px;text-align:left;cursor:default;display:flex;align-items:center}#widthReference{width:100%}::ng-deep app-default-renderer{width:inherit;height:100%;display:flex;align-items:center}\n"]
     }]
   }], function () {

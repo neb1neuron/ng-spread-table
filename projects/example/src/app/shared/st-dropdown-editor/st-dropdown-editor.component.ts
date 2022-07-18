@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from '@angular/core';
-import { IEditorComponent, IEditorParams } from 'test-packages/spread-table/lib/models/editor.models';
+import { IEditorComponent, IEditorParams } from 'spread-table';
 
 @Component({
   selector: 'app-st-dropdown-editor',
