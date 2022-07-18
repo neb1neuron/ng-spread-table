@@ -151,7 +151,7 @@ AppModule.ɵmod = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵ
 AppModule.ɵinj = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineInjector"]({ providers: [{
             provide: ngx_highlightjs__WEBPACK_IMPORTED_MODULE_8__.HIGHLIGHT_OPTIONS,
             useValue: {
-                fullLibraryLoader: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_index_js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js */ 7722)),
+                fullLibraryLoader: () => __webpack_require__.e(/*! import() */ "node_modules_highlight_js_es_index_js.js").then(__webpack_require__.bind(__webpack_require__, /*! highlight.js */ 7722)),
                 themePath: 'assets/androidstudio.css' // Optional, and useful if you want to change the theme dynamically
             }
         }], imports: [[
