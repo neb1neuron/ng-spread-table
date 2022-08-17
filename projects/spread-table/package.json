@@ -1,6 +1,6 @@
 {
   "name": "spread-table",
-  "version": "3.3.0",
+  "version": "4.0.0",
   "keywords": [
     "spreadtable",
     "spread-table",
@@ -15,8 +15,8 @@
     "spreadsheet"
   ],
   "peerDependencies": {
-    "@angular/common": "~^14.1.2",
-    "@angular/core": "~^14.1.2",
+    "@angular/common": "^14.1.2",
+    "@angular/core": "^14.1.2",
     "@angular/cdk": "^13.3.7",
     "rxjs": "~7.4.0",
     "@angular/compiler-cli": "^14.1.2",

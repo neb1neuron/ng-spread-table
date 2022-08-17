@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { IEditor, IEditorComponent, IEditorParams } from '../../models/editor.models';
 import { DefaultEditorComponent } from '../default-editor/default-editor.component';
 import { EditorDirective } from './editor.directive';
@@ -15,7 +15,7 @@ export class EditorComponent implements OnInit, IEditor {
 
   @Output() setValue = new EventEmitter<any>();
 
-  input = new UntypedFormControl('');
+  input = new FormControl('');
   defaultEditor = DefaultEditorComponent;
 
   constructor() { }

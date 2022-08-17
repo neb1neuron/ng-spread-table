@@ -14,6 +14,11 @@
 [Codesandbox](https://codesandbox.io/s/goofy-dan-5703h)
 
 ## Features  
+| SpreadTable Version | Angular Version |
+|---------------------|-----------------|
+| 3.*                 | 13              |
+| 4.*                 | 14              |
+
 :white_check_mark: copy/paste/cut functionality with keyboard shortcuts  
 :white_check_mark: copy/paste/cut in bulk  
 :white_check_mark: copy/paste/cut from and into excel  
@@ -233,6 +238,8 @@ Note: This plugin is till work in progress
 ```
 
 ## Versions
+### v4.0.0
+-  update to angular 14
 ### v3.3.0
 -  fix copy/paste in Firefox
 ### v3.0.0
@@ -279,12 +286,6 @@ Note: This plugin is till work in progress
 - added styling for disabled column and improved overall styling
 - fixed paste on disabled cells
 - **added validations and error on cells**
-
-## Dependencies
-
-```
-"rxjs": "~6.6.0",
-```
 
 ## License
 

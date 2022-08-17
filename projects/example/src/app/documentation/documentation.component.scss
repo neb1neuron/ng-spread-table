@@ -17,3 +17,18 @@ ul {
   padding: 0 10px;
   margin: 0;
 }
+
+table {
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  padding: 0 10px;
+
+  th,
+  td {
+    border: 2px dashed #727272;
+    padding: 10px;
+  }
+  th {
+    background: #00d26a;
+  }
+}
