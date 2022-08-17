@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Cell, Column, Row } from './models/cell.model';
 import { SpreadTable } from './models/spread-table.models';
 import { Change, UndoRedoService } from './services/undo-redo.service';
@@ -32,8 +32,8 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   firstLoad = true;
 
   focus = true;
-  form = new FormGroup({});
-  formControl = new FormControl();
+  form = new UntypedFormGroup({});
+  formControl = new UntypedFormControl();
   selectedRowIndex = -1;
 
   isMouseDown = false;
@@ -328,10 +328,10 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
     this.focus = true;
     this.selectedCellCoordinates = { rowIndex: cell.rowIndex, columnName: cell.columnName };
 
-    this.form = new FormGroup({});
+    this.form = new UntypedFormGroup({});
 
     this.columns.forEach((column) => {
-      this.form.addControl(column.name, new FormControl(this.getCellValue(this.data[cell.rowIndex], column.name), column.validators));
+      this.form.addControl(column.name, new UntypedFormControl(this.getCellValue(this.data[cell.rowIndex], column.name), column.validators));
     });
 
     this.startCellIndex = this.columns.indexOf(this.columns.find(c => c.name === cell.columnName)!);
@@ -375,10 +375,10 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
           this.isEditMode = true;
           this.focus = true;
 
-          this.form = new FormGroup({});
+          this.form = new UntypedFormGroup({});
 
           this.columns.forEach((column) => {
-            this.form.addControl(column.name, new FormControl(this.getCellValue(this.data[this.selectedCellCoordinates?.rowIndex || 0], column.name), column.validators));
+            this.form.addControl(column.name, new UntypedFormControl(this.getCellValue(this.data[this.selectedCellCoordinates?.rowIndex || 0], column.name), column.validators));
           });
 
           this.deleteSelectedCellsValues();
@@ -905,7 +905,7 @@ export class SpreadTableComponent implements OnChanges, SpreadTable {
   private setCellValueAndValidate(cell: Cell, value: any) {
     cell.value = value;
     cell.selected = true;
-    this.formControl = new FormControl(value, this.columns.find(col => col.name === cell.columnName)!.validators);
+    this.formControl = new UntypedFormControl(value, this.columns.find(col => col.name === cell.columnName)!.validators);
     const controlErrors = this.formControl.errors;
     let cellErrors: string[] = [];
     if (controlErrors) {

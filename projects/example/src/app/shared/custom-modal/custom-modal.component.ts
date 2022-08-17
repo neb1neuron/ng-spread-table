@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-modal',
@@ -20,7 +20,7 @@ export class CustomModalComponent implements OnInit {
     this.input.setValue(this.value);
   }
 
-  input = new FormControl(this.value, [Validators.required]);
+  input = new UntypedFormControl(this.value, [Validators.required]);
 
   getValue() {
     return this.input.value;
